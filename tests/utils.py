@@ -135,6 +135,7 @@ def runAsPython(test_dir, main_code, extra_code=None, args=None):
     """Run a block of Python code with the Python interpreter."""
     # Output source code into test directory
     with open(os.path.join(test_dir, 'test.py'), 'w', encoding='utf-8') as py_source:
+        py_source.write("import sys;sys.stdout.reconfigure(encoding='utf-8')\n")
         py_source.write(main_code)
 
     if extra_code:
