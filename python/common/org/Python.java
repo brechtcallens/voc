@@ -453,6 +453,24 @@ public class Python {
         }
     }
 
+    /*
+    Perhaps needs to be moved to bottom?
+    **/
+
+    @org.python.Method(
+            __doc__ = "sin(number) -> number" +
+                    "\n" +
+                    "Return the sine of x radians.\n",
+            args = {"number"}
+    )
+    public static org.python.Object sin(org.python.Object number) {
+        try {
+            return number.__sin__();
+        } catch (org.python.exceptions.AttributeError ae) {
+            throw new org.python.exceptions.TypeError("bad operand type for sin(): '" + number.typeName() + "'");
+        }
+    }
+
     @org.python.Method(
             __doc__ = "all(iterable) -> bool" +
                     "\n" +

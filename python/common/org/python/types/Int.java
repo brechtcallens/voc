@@ -881,6 +881,13 @@ public class Int extends org.python.types.Object {
     }
 
     @org.python.Method(
+            __doc__ = "sin(self)"
+    )
+    public org.python.Object __sin__() {
+        return new org.python.types.Float(Math.sin(this.value));
+    }
+
+    @org.python.Method(
             __doc__ = "~self"
     )
     public org.python.Object __invert__() {

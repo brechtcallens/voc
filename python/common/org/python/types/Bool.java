@@ -619,6 +619,13 @@ public class Bool extends org.python.types.Object {
     }
 
     @org.python.Method(
+            __doc__ = "sin(self)"
+    )
+    public org.python.Object __sin__() {
+        return new org.python.types.Float(Math.sin(this.value ? 1 : 0));
+    }
+
+    @org.python.Method(
             __doc__ = "~self"
     )
     public org.python.Object __invert__() {

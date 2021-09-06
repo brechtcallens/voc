@@ -159,6 +159,7 @@ public interface Object extends Comparable {
     public org.python.Object __neg__();
     public org.python.Object __pos__();
     public org.python.Object __abs__();
+    //public org.python.Object __sin__(); // TODO : Not sure if we should place this here...
     public org.python.Object __invert__();
 
     public org.python.Object __not__();

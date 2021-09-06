@@ -610,6 +610,13 @@ public class Float extends org.python.types.Object {
     }
 
     @org.python.Method(
+            __doc__ = "sin(self)"
+    )
+    public org.python.Object __sin__() {
+        return new org.python.types.Float(Math.sin(this.value));
+    }
+
+    @org.python.Method(
             __doc__ = "int(self)"
     )
     public org.python.Object __int__() {
