@@ -31,14 +31,14 @@ class MathSinTests(TranspileTestCase):
     def test_sin_postive_float_values(self):
         self.assertCodeExecution("""
             from math import sin
-            print(sin(5))
+            print(sin(5.0))
         """
         )
 
     def test_sin_negative_float_values(self):
         self.assertCodeExecution("""
             from math import sin
-            print(sin(5.0))
+            print(sin(-5.0))
         """
         )
 
