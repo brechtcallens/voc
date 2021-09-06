@@ -843,13 +843,6 @@ public class Super implements org.python.Object {
     @org.python.Method(
             __doc__ = ""
     )
-    public org.python.Object __sin__() {
-        throw new org.python.exceptions.AttributeError(this, "__sin__");
-    }
-
-    @org.python.Method(
-            __doc__ = ""
-    )
     public org.python.Object __invert__() {
         throw new org.python.exceptions.AttributeError(this, "__invert__");
     }
