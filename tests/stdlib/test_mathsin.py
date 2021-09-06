@@ -6,11 +6,9 @@ class MathSinTests(TranspileTestCase):
     def test_sin_zero(self):
         self.assertCodeExecution("""
             from math import sin
-            x = sin(0)
-            print('x =', x) 
+            print(sin(0)) 
 
-            y = sin(0.0)       
-            print('y =', y)
+            print(sin(0.0))
         """
         )
 
@@ -18,8 +16,7 @@ class MathSinTests(TranspileTestCase):
 
         self.assertCodeExecution("""
             from math import sin
-            x = sin(5)
-            print('x =', x)
+            print(sin(5))
         """
         )
 
@@ -27,24 +24,21 @@ class MathSinTests(TranspileTestCase):
 
         self.assertCodeExecution("""
             from math import sin
-            x = sin(-5)
-            print('x =', x)
+            print(sin(-5))
         """
         )
 
     def test_sin_postive_float_values(self):
         self.assertCodeExecution("""
             from math import sin
-            x = sin(5)
-            print('x =', x)
+            print(sin(5))
         """
         )
 
     def test_sin_negative_float_values(self):
         self.assertCodeExecution("""
             from math import sin
-            x = sin(5.0)
-            print('x =', x)
+            print(sin(5.0))
         """
         )
 
@@ -52,8 +46,8 @@ class MathSinTests(TranspileTestCase):
     def test_sin_boolean_boolean_values(self):
         self.assertCodeExecution("""
             from math import sin
-            x = sin(-5.0)
-            print('x =', x)
+            print(sin(True))
+            print(sin(False))
         """
         )
     
