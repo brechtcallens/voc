@@ -40,9 +40,11 @@ class MathModuleTests(TranspileTestCase):
             print(math.fabs(1))
             """)
 
-    @expectedFailure
     def test_fabs_string(self):
         self.assertCodeExecution("""
             import math
-            print(math.fabs('string'))
+            try:
+                print(math.fabs('string'))
+            except Exception as e:
+                print(type(e), ":", e)
             """)

@@ -28,7 +28,7 @@ public class math extends org.python.types.Module {
     )
     public static org.python.types.Float fabs(org.python.Object x) {
         if (!(x instanceof org.python.types.Int) && !(x instanceof org.python.types.Float)) {
-            throw new org.python.exceptions.TypeError("real expected, not " + x.typeName());
+            throw new org.python.exceptions.TypeError("must be real number, not " + x.typeName());
         }
         double parsedArgument = ((org.python.types.Float) x.__float__()).value;
         return new org.python.types.Float(Math.abs(parsedArgument));
