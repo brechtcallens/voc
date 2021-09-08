@@ -1,5 +1,3 @@
-from unittest import expectedFailure
-
 from ..utils import TranspileTestCase
 
 
@@ -21,7 +19,7 @@ class MathModuleTests(TranspileTestCase):
             import math
             print(math.fabs(1.4))
             """)
-    
+
     def test_fabs_integer_negative(self):
         self.assertCodeExecution("""
             import math
