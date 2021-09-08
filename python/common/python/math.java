@@ -40,6 +40,6 @@ public class math extends org.python.types.Module {
             double val = Double.valueOf(((org.python.types.Float) x.__float__()).value);
             return new org.python.types.Float(Math.sin(val));
         }        
-        throw new org.python.exceptions.TypeError("Wrong type. Must be float, int or bool... Not " + x.typeName());
+        throw new org.python.exceptions.TypeError("must be real number, not " + x.typeName());
     }
 }
