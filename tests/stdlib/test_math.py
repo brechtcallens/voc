@@ -1,7 +1,7 @@
 from ..utils import TranspileTestCase
 
 
-class MathSinTests(TranspileTestCase):
+class MathModuleTests(TranspileTestCase):
 
     def test_sin_zero(self):
         self.assertCodeExecution("""
@@ -11,14 +11,12 @@ class MathSinTests(TranspileTestCase):
         """)
 
     def test_sin_positive__int_values(self):
-
         self.assertCodeExecution("""
             from math import sin
             print(sin(5))
         """)
 
     def test_sin_negative__int_values(self):
-
         self.assertCodeExecution("""
             from math import sin
             print(sin(-5))
@@ -36,7 +34,7 @@ class MathSinTests(TranspileTestCase):
             print(sin(-5.0))
         """)
 
-    def test_sin_boolean_boolean_values(self):
+    def test_sin_boolean_values(self):
         self.assertCodeExecution("""
             from math import sin
             print(sin(True))
