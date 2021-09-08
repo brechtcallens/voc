@@ -308,8 +308,8 @@ def _compile_module(args):
         cwd=REPO_ROOT
     )
     stdout, stderr = p.communicate()
-    stdout = stdout.decode()
-    stderr = stderr.decode()
+    stdout = stdout.decode(sys.stdout.encoding)
+    stderr = stderr.decode(sys.stdout.encoding)
 
     # print('=====' * 10)
     # print("OUT", stdout)
