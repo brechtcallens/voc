@@ -12,3 +12,5 @@ print(sin(-5.0))
 
 print(sin(True))
 print(sin(False))
+
+print("Hello world")

@@ -40,3 +40,12 @@ class MathModuleTests(TranspileTestCase):
             print(sin(True))
             print(sin(False))
         """)
+    
+    def test_string_input(self):
+        self.assertCodeExecution("""
+            from math import sin
+            try:
+                print(sin("Hello world"))
+            except Exception as e:
+                print(type(e), ':', e)
+        """)
