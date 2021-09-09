@@ -1,5 +1,11 @@
 import math
 
+# Test math.sqrt
+print(math.sqrt(4))
+print(math.sqrt(12.34))
+print(math.sqrt(-0.0))
+
+# Test math.fabs
 print(math.fabs(-1.4))
 print(math.fabs(0.0))
 print(math.fabs(1.4))
