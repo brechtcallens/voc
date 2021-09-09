@@ -1,20 +1,5 @@
 import math
 
-# Test math.sin
-print(math.sin(0))
-print(math.sin(0.0))
-
-print(math.sin(5))
-print(math.sin(-5))
-
-print(math.sin(5.0))
-print(math.sin(-5.0))
-
-print(math.sin(True))
-print(math.sin(False))
-
-print(math.sin("Hello world"))
-
 # Test math.sqrt
 print(math.sqrt(4))
 print(math.sqrt(12.34))
@@ -34,3 +19,17 @@ try:
 except Exception as e:
     print(type(e), ":", e)
 
+# Test math.sin
+print(math.sin(0))
+print(math.sin(0.0))
+
+print(math.sin(5))
+print(math.sin(-5))
+
+print(math.sin(5.0))
+print(math.sin(-5.0))
+
+print(math.sin(True))
+print(math.sin(False))
+
+print(math.sin("Hello world"))
