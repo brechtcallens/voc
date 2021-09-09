@@ -22,10 +22,10 @@ package python;
             "are floats."
 )
 public class math extends org.python.types.Module {
-
     @org.python.Method(
         __doc__ = "Return the square root of x.",
-        args = {"x"})
+        args = {"x"}
+    )
     public static org.python.Object sqrt(org.python.Object x) {
         //Type checking the parameter
         if (!(x instanceof org.python.types.Int) && !(x instanceof org.python.types.Float)) {
@@ -36,5 +36,17 @@ public class math extends org.python.types.Module {
             throw new org.python.exceptions.ValueError("math domain error");
         }
         return new org.python.types.Float(Math.sqrt(arg));
+    }
+  
+    @org.python.Method(
+        __doc__ = "Return the absolute value of x.",
+        args = {"x"}
+    )
+    public static org.python.types.Float fabs(org.python.Object x) {
+        if (!(x instanceof org.python.types.Int) && !(x instanceof org.python.types.Float)) {
+            throw new org.python.exceptions.TypeError("must be real number, not " + x.typeName());
+        }
+        double parsedArgument = ((org.python.types.Float) x.__float__()).value;
+        return new org.python.types.Float(Math.abs(parsedArgument));
     }
 }
