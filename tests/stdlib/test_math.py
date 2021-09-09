@@ -33,7 +33,7 @@ class MathModuleTests(TranspileTestCase):
 
     def test_sqrt_invalid_type(self):
         self.assertCodeExecution(self.create_test_sqrt("'Hello'"))
-    
+
     def test_fabs_float_negative(self):
         self.assertCodeExecution("""
             import math
