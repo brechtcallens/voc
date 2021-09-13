@@ -18,3 +18,18 @@ try:
     print(math.fabs('string'))
 except Exception as e:
     print(type(e), ":", e)
+
+# Test math.sin
+print(math.sin(0))
+print(math.sin(0.0))
+
+print(math.sin(5))
+print(math.sin(-5))
+
+print(math.sin(5.0))
+print(math.sin(-5.0))
+
+print(math.sin(True))
+print(math.sin(False))
+
+print(math.sin("Hello world"))

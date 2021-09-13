@@ -21,6 +21,7 @@ package python;
             "Except when explicitly noted otherwise, all return values " +
             "are floats."
 )
+
 public class math extends org.python.types.Module {
     @org.python.Method(
         __doc__ = "Return the square root of x.",
@@ -48,5 +49,25 @@ public class math extends org.python.types.Module {
         }
         double parsedArgument = ((org.python.types.Float) x.__float__()).value;
         return new org.python.types.Float(Math.abs(parsedArgument));
+    }
+
+    @org.python.Method(
+        __doc__ = "Return the sine of x radians.\n",
+        args = {"x"})
+    public static org.python.types.Float sin(org.python.Object x)  {
+        // Bool, Ints, Floats allowed
+        if (x instanceof org.python.types.Int){
+            double val = Double.valueOf(((org.python.types.Int) x.__int__()).value);
+            return new org.python.types.Float(Math.sin(val));
+        }
+        if (x instanceof org.python.types.Float){
+            double val = Double.valueOf(((org.python.types.Float) x.__float__()).value);
+            return new org.python.types.Float(Math.sin(val));
+        }
+        if (x instanceof org.python.types.Bool){
+            double val = Double.valueOf(((org.python.types.Float) x.__float__()).value);
+            return new org.python.types.Float(Math.sin(val));
+        }        
+        throw new org.python.exceptions.TypeError("must be real number, not " + x.typeName());
     }
 }
