@@ -233,6 +233,45 @@ public class DateTime extends org.python.types.Object {
         int day = c.get(java.util.Calendar.DAY_OF_WEEK);
         int[] convertToPython = {6, 0, 1, 2, 3, 4, 5};
         return org.python.types.Int.getInt(convertToPython[day - 1]);
+    }
 
+    @org.python.Method(
+        __doc__ = "Return self<value.",
+        args = {"other"}
+    )
+    public org.python.Object __lt__(org.python.Object other) {
+        return null;
+    }
+
+    @org.python.Method(
+        __doc__ = "Return self<=value.",
+        args = {"other"}
+    )
+    public org.python.Object __le__(org.python.Object other) {
+        return null;
+    }
+
+    @org.python.Method(
+        __doc__ = "Return self==value.",
+        args = {"other"}
+    )
+    public org.python.Object __eq__(org.python.Object other) {
+        return null;
+    }
+
+    @org.python.Method(
+        __doc__ = "Return self>value.",
+        args = {"other"}
+    )
+    public org.python.Object __gt__(org.python.Object other) {
+        return null;
+    }
+
+    @org.python.Method(
+        __doc__ = "Return self>=value.",
+        args = {"other"}
+    )
+    public org.python.Object __ge__(org.python.Object other) {
+        return null;
     }
 }
