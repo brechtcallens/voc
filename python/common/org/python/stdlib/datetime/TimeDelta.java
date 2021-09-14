@@ -17,8 +17,10 @@ public class TimeDelta extends org.python.types.Object {
 
     @org.python.Attribute
     public org.python.Object min = __min__();
+
     @org.python.Attribute
     public org.python.Object max = __max__();
+
     @org.python.Attribute
     public org.python.Object resolution = __resolution__();
 
@@ -41,7 +43,7 @@ public class TimeDelta extends org.python.types.Object {
             for (java.lang.String key : kwargs.keySet()) {
                 correct = allowedList.contains(key);
                 if (!correct) {
-                    throw new org.python.exceptions.TypeError(key + " is an invalid keuword argument for this function");
+                    throw new org.python.exceptions.TypeError(key + " is an invalid keyword argument for this function");
 
                 }
             }
@@ -105,7 +107,7 @@ public class TimeDelta extends org.python.types.Object {
         }
     }
 
-    @org.python.Method(__doc__ = "returns days")
+    @org.python.Method(__doc__ = "returns day")
     public org.python.types.Str __days__() {
         return new org.python.types.Str(this.days + "");
     }
@@ -115,7 +117,7 @@ public class TimeDelta extends org.python.types.Object {
         return new org.python.types.Str(this.seconds + "");
     }
 
-    @org.python.Method(__doc__ = "returns day")
+    @org.python.Method(__doc__ = "returns microseconds")
     public org.python.types.Str __microseconds__() {
         return new org.python.types.Str(this.microseconds + "");
     }
