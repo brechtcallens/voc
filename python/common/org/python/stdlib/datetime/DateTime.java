@@ -1,6 +1,10 @@
 package org.python.stdlib.datetime;
 
+import org.python.types.Object;
+
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Map;
 
 public class DateTime extends org.python.types.Object {
     private final int YEAR_INDEX = 0;
@@ -12,7 +16,7 @@ public class DateTime extends org.python.types.Object {
     private final int MICROSECOND_INDEX = 6;
 
     private final int MIN_YEAR = 1;
-    private final int MAX_YEAR = 999;
+    private final int MAX_YEAR = 9999;
 
     private Long[] timeUnits = {0l, 0l, 0l, 0l, 0l, 0l, 0l};
 
@@ -60,36 +64,42 @@ public class DateTime extends org.python.types.Object {
                 this.timeUnits[keyIndex] = ((org.python.types.Int) args[argIndex]).value;
                 argIndex++;
             } else if (keyIndex < 3) {
-                throw new org.python.exceptions.TypeError("Required argument '" + keys[keyIndex] + "' (pos " + (keyIndex + 1) + ") not found");
+                throw new org.python.exceptions.TypeError("function missing required argument '" + keys[keyIndex] + "' (pos " + (keyIndex + 1) + ")");
             }
             keyIndex++;
         }
 
+        for (Map.Entry<java.lang.String, org.python.Object> entry : kwargs.entrySet()) {
+            if (!Arrays.asList(keys).contains(entry.getKey())) {
+                throw new org.python.exceptions.TypeError("'" + entry.getKey() + "' is an invalid keyword argument for this function");
+            }
+        }
+
         if (this.timeUnits[YEAR_INDEX] < MIN_YEAR || this.timeUnits[YEAR_INDEX] > MAX_YEAR) {
-            throw new org.python.exceptions.ValueError("year " + this.timeUnits[YEAR_INDEX] + "is out of range");
+            throw new org.python.exceptions.ValueError("year " + this.timeUnits[YEAR_INDEX] + " is out of range");
         }
 
         if (this.timeUnits[MONTH_INDEX] < 1 || this.timeUnits[MONTH_INDEX] > 12) {
-            throw new org.python.exceptions.ValueError("month " + this.timeUnits[MONTH_INDEX] + "is out of range");
+            throw new org.python.exceptions.ValueError("month must be in 1..12");
         }
         if (this.timeUnits[DAY_INDEX] < 1 || this.timeUnits[DAY_INDEX] > 31) {
-            throw new org.python.exceptions.ValueError("day " + this.timeUnits[DAY_INDEX] + "is out of range");
+            throw new org.python.exceptions.ValueError("day is out of range for month");
         }
 
-        if (this.timeUnits[HOUR_INDEX] < 0 || this.timeUnits[HOUR_INDEX] > 24) {
-            throw new org.python.exceptions.ValueError("hour " + this.timeUnits[HOUR_INDEX] + "is out of range");
+        if (this.timeUnits[HOUR_INDEX] < 0 || this.timeUnits[HOUR_INDEX] > 23) {
+            throw new org.python.exceptions.ValueError("hour must be in 0..23");
         }
 
-        if (this.timeUnits[MINUTE_INDEX] < 0 || this.timeUnits[MINUTE_INDEX] > 60) {
-            throw new org.python.exceptions.ValueError("minute " + this.timeUnits[MINUTE_INDEX] + "is out of range");
+        if (this.timeUnits[MINUTE_INDEX] < 0 || this.timeUnits[MINUTE_INDEX] > 59) {
+            throw new org.python.exceptions.ValueError("minute must be in 0..59");
         }
 
-        if (this.timeUnits[SECOND_INDEX] < 0 || this.timeUnits[SECOND_INDEX] > 60) {
-            throw new org.python.exceptions.ValueError("second " + this.timeUnits[SECOND_INDEX] + "is out of range");
+        if (this.timeUnits[SECOND_INDEX] < 0 || this.timeUnits[SECOND_INDEX] > 59) {
+            throw new org.python.exceptions.ValueError("second must be in 0..59");
         }
 
-        if (this.timeUnits[MICROSECOND_INDEX] < 0 || this.timeUnits[MICROSECOND_INDEX] > 100000) {
-            throw new org.python.exceptions.ValueError("microsecond " + this.timeUnits[MICROSECOND_INDEX] + "is out of range");
+        if (this.timeUnits[MICROSECOND_INDEX] < 0 || this.timeUnits[MICROSECOND_INDEX] > 999999) {
+            throw new org.python.exceptions.ValueError("microsecond must be in 0..999999");
         }
 
         this.year = __year__();
@@ -213,9 +223,9 @@ public class DateTime extends org.python.types.Object {
 
     @org.python.Method(__doc__ = "")
     public org.python.Object weekday() {
-        double y = ((org.python.types.Int) this.year).value;
-        double m = ((org.python.types.Int) this.month).value;
-        double d = ((org.python.types.Int) this.day).value;
+        long y = ((org.python.types.Int) this.year.__int__()).value;
+        long m = ((org.python.types.Int) this.month.__int__()).value;
+        long d = ((org.python.types.Int) this.day.__int__()).value;
 
         java.util.Date myCalendar = new java.util.GregorianCalendar((int) y, (int) m - 1, (int) d).getTime();
         java.util.Calendar c = java.util.Calendar.getInstance();
