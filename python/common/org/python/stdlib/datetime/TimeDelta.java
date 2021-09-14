@@ -66,6 +66,7 @@ public class TimeDelta extends org.python.types.Object {
             this.days = args[0];
             this.seconds = args[1];
             this.microseconds = args[2];
+
         } else if (args.length == 2) {
             this.days = args[0];
             this.seconds = args[1];
@@ -75,7 +76,6 @@ public class TimeDelta extends org.python.types.Object {
             this.days = args[0];
             this.seconds = org.python.types.Int.getInt(0);
             this.microseconds = org.python.types.Int.getInt(0);
-
         }
 
         if (kwargs.get("weeks") != null) {
@@ -94,16 +94,16 @@ public class TimeDelta extends org.python.types.Object {
 
         if (kwargs.get("minutes") != null) {
             long minutes = ((org.python.types.Int) kwargs.get("minutes")).value;
-            long minute = ((org.python.types.Int) this.seconds).value;
-            minute = minute + minutes * 60;
-            this.seconds = org.python.types.Int.getInt(minute);
+            long second = ((org.python.types.Int) this.seconds).value;
+            second = second + minutes * 60;
+            this.seconds = org.python.types.Int.getInt(second);
         }
 
         if (kwargs.get("milliseconds") != null) {
             long millisecond = ((org.python.types.Int) kwargs.get("milliseconds")).value;
-            long mili = ((org.python.types.Int) this.microseconds).value;
-            mili = mili + millisecond * 100;
-            this.microseconds = org.python.types.Int.getInt(mili);
+            long microsecond = ((org.python.types.Int) this.microseconds).value;
+            microsecond = microsecond + millisecond * 1000;
+            this.microseconds = org.python.types.Int.getInt(microsecond);
         }
     }
 
@@ -112,7 +112,7 @@ public class TimeDelta extends org.python.types.Object {
         return new org.python.types.Str(this.days + "");
     }
 
-    @org.python.Method(__doc__ = "returns month")
+    @org.python.Method(__doc__ = "returns seconds")
     public org.python.types.Str __seconds__() {
         return new org.python.types.Str(this.seconds + "");
     }
@@ -139,7 +139,7 @@ public class TimeDelta extends org.python.types.Object {
     }
 
     @org.python.Method()
-    public org.python.types.Str total_seconds() {
+    public org.python.types.Str totalSeconds() {
         long days = (((org.python.types.Int) this.days).value) * 24 * 3600;
         long sum_seconds = days + (((org.python.types.Int) this.seconds).value);
         long microseconds = (((org.python.types.Int) this.microseconds).value);
@@ -194,12 +194,8 @@ public class TimeDelta extends org.python.types.Object {
         String days = Long.toString(dayslong);
         long seconds = ((org.python.types.Int) this.seconds).value;
         long microseconds = ((org.python.types.Int) this.microseconds).value;
-        String returnStr = days + " days, " + "seconds: " + seconds + ", microseconds: " + microseconds;
+        String returnStr = "days: " + days + ", seconds: " + seconds + ", microseconds: " + microseconds;
         return new org.python.types.Str(returnStr);
     }
 
-    @org.python.Method(__doc__ = "")
-    public static org.python.Object constant_4() {
-        return org.python.types.Int.getInt(4);
-    }
 }
