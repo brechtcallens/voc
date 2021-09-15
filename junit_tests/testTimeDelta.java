@@ -1,7 +1,6 @@
 import org.junit.Test;
 import org.python.stdlib.datetime.TimeDelta;
 
-import java.sql.Time;
 import java.util.Collections;
 import java.util.Map;
 
@@ -10,31 +9,29 @@ import static org.junit.jupiter.api.Assertions.*;
 public class testTimeDelta {
     private final Map<java.lang.String, org.python.Object> empty_kwargs = Collections.emptyMap();
 
-    private org.python.Object[] createArgs(int[] values) {
+    private TimeDelta createDelta(int... values) {
         org.python.Object[] args = new org.python.Object[values.length];
 
         for (int i = 0; i < values.length; i++) {
             args[i] = org.python.types.Int.getInt(values[i]);
         }
 
-        return args;
+        return new TimeDelta(args, empty_kwargs);
     }
 
-
-    private org.python.Object[] createArgsFloat(float[] values) {
+    private TimeDelta createDelta(float... values) {
         org.python.Object[] args = new org.python.Object[values.length];
 
         for (int i = 0; i < values.length; i++) {
             args[i] = new org.python.types.Float(values[i]);
         }
 
-        return args;
+        return new TimeDelta(args, empty_kwargs);
     }
 
     @Test
     public void testConstructorOneArguments() {
-        org.python.Object[] args = createArgs(new int[]{1});
-        TimeDelta delta = new TimeDelta(args, empty_kwargs);
+        TimeDelta delta = createDelta(1);
 
         assertEquals(org.python.types.Int.getInt(1), delta.days);
         assertEquals(org.python.types.Int.getInt(0), delta.seconds);
@@ -43,8 +40,7 @@ public class testTimeDelta {
 
     @Test
     public void testConstructorTwoArguments() {
-        org.python.Object[] args = createArgs(new int[]{1, 2});
-        TimeDelta delta = new TimeDelta(args, empty_kwargs);
+        TimeDelta delta = createDelta(1, 2);
 
         assertEquals(org.python.types.Int.getInt(1), delta.days);
         assertEquals(org.python.types.Int.getInt(2), delta.seconds);
@@ -53,8 +49,7 @@ public class testTimeDelta {
 
     @Test
     public void testConstructorThreeArguments() {
-        org.python.Object[] args = createArgs(new int[]{1, 2, 3});
-        TimeDelta delta = new TimeDelta(args, empty_kwargs);
+        TimeDelta delta = createDelta(1, 2, 3);
 
         assertEquals(org.python.types.Int.getInt(1), delta.days);
         assertEquals(org.python.types.Int.getInt(2), delta.seconds);
@@ -73,10 +68,8 @@ public class testTimeDelta {
 
     @Test
     public void testConstructorTooManyArguments() {
-        org.python.Object[] args = createArgs(new int[]{5, 5, 5, 5, 5, 5, 5, 5});
-
         Exception exception = assertThrows(org.python.exceptions.TypeError.class, () -> {
-            TimeDelta delta = new TimeDelta(args, empty_kwargs);
+            TimeDelta delta = createDelta(5, 5, 5, 5, 5, 5, 5, 5);
         });
 
         assertEquals("__new__() takes at most 7 arguments (8 given)", exception.getMessage());
@@ -84,58 +77,44 @@ public class testTimeDelta {
 
     @Test
     public void testTotalSeconds() {
-        org.python.Object[] args0 = createArgs(new int[]{1, 2});
-        TimeDelta delta0 = new TimeDelta(args0, empty_kwargs);
+        TimeDelta delta0 = createDelta(1, 2);
         assertEquals( "86402.0", delta0.totalSeconds().toString());
 
-        org.python.Object[] args1 = createArgs(new int[]{1, 2, 3});
-        TimeDelta delta1 = new TimeDelta(args1, empty_kwargs);
+        TimeDelta delta1 = createDelta(1, 2, 3);
         assertEquals( "86402.000003", delta1.totalSeconds().toString());
 
-        org.python.Object[] args2 = createArgs(new int[]{1, 2, 30});
-        TimeDelta delta2 = new TimeDelta(args2, empty_kwargs);
+        TimeDelta delta2 = createDelta(1, 2, 30);
         assertEquals("86402.000030", delta2.totalSeconds().toString());
 
-        org.python.Object[] args3 = createArgs(new int[]{1, 2, 300});
-        TimeDelta delta3 = new TimeDelta(args3, empty_kwargs);
+        TimeDelta delta3 = createDelta(1, 2, 300);
         assertEquals("86402.000300", delta3.totalSeconds().toString());
 
-        org.python.Object[] args4 = createArgs(new int[]{1, 2, 3000});
-        TimeDelta delta4 = new TimeDelta(args4, empty_kwargs);
+        TimeDelta delta4 = createDelta(1, 2, 3000);
         assertEquals("86402.003000", delta4.totalSeconds().toString());
 
-        org.python.Object[] args5 = createArgs(new int[]{1, 2, 30000});
-        TimeDelta delta5 = new TimeDelta(args5, empty_kwargs);
+        TimeDelta delta5 = createDelta(1, 2, 30000);
         assertEquals("86402.030000", delta5.totalSeconds().toString());
 
-        org.python.Object[] args6 = createArgs(new int[]{1, 2, 300000});
-        TimeDelta delta6 = new TimeDelta(args6, empty_kwargs);
+        TimeDelta delta6 = createDelta(1, 2, 300000);
         assertEquals("86402.300000", delta6.totalSeconds().toString());
     }
 
     @Test
     public void testTotalSecondsNegative() {
-        org.python.Object[] args0 = createArgs(new int[]{1, 2, -3});
-        TimeDelta delta0 = new TimeDelta(args0, empty_kwargs);
+        TimeDelta delta0 = createDelta(1, 2, -3);
         assertEquals( "86401.999997", delta0.totalSeconds().toString()); //fails
 
-        org.python.Object[] args1 = createArgs(new int[]{1, -2});
-        TimeDelta delta1 = new TimeDelta(args1, empty_kwargs);
+        TimeDelta delta1 = createDelta(1, -2);
         assertEquals( "86398.0", delta1.totalSeconds().toString());
 
-        org.python.Object[] args2 = createArgs(new int[]{-1, 2});
-        TimeDelta delta2 = new TimeDelta(args2, empty_kwargs);
+        TimeDelta delta2 = createDelta(-1, 2);
         assertEquals( "-86398.0", delta2.totalSeconds().toString());
     }
 
     @Test
     public void test__add__Positive() {
-        org.python.Object[] args0 = createArgs(new int[]{1, 2, 3});
-        TimeDelta delta0 = new TimeDelta(args0, empty_kwargs);
-
-        org.python.Object[] args1 = createArgs(new int[]{4, 5, 6});
-        TimeDelta delta1 = new TimeDelta(args1, empty_kwargs);
-
+        TimeDelta delta0 = createDelta(1, 2, 3);
+        TimeDelta delta1 = createDelta(4, 5, 6);
         TimeDelta sum = (TimeDelta) delta0.__add__(delta1);
 
         assertEquals("5", sum.days.toString());
@@ -145,12 +124,8 @@ public class testTimeDelta {
 
     @Test
     public void test__add__Negative() {
-        org.python.Object[] args0 = createArgs(new int[]{-1, 2, -3});
-        TimeDelta delta0 = new TimeDelta(args0, empty_kwargs);
-
-        org.python.Object[] args1 = createArgs(new int[]{4, -5, 6});
-        TimeDelta delta1 = new TimeDelta(args1, empty_kwargs);
-
+        TimeDelta delta0 = createDelta(-1, 2, -3);
+        TimeDelta delta1 = createDelta(4, -5, 6);
         TimeDelta sum = (TimeDelta) delta0.__add__(delta1);
 
         assertEquals("3", sum.days.toString());
@@ -160,8 +135,7 @@ public class testTimeDelta {
 
     @Test
     public void test__pos__(){
-        org.python.Object[] args = createArgs(new int[]{1, 2, 3});
-        TimeDelta delta = new TimeDelta(args, empty_kwargs);
+        TimeDelta delta = createDelta(1, 2, 3);
         TimeDelta copy = (TimeDelta) delta.__pos__();
 
         assertEquals(delta.days, copy.days);
@@ -171,13 +145,10 @@ public class testTimeDelta {
 
     @Test
     public void test__str__(){
-        org.python.Object[] args1 = createArgs(new int[]{1, 2, 3});
-        TimeDelta delta1 = new TimeDelta(args1, empty_kwargs);
+        TimeDelta delta1 = createDelta(1, 2, 3);
         assertEquals("days: 1, seconds: 2, microseconds: 3", delta1.__str__().toString());
 
-        org.python.Object[] args2 = createArgs(new int[]{-1, -2, -3});
-        TimeDelta delta2 = new TimeDelta(args2, empty_kwargs);
+        TimeDelta delta2 = createDelta(-1, -2, -3);
         assertEquals("days: -1, seconds: -2, microseconds: -3", delta2.__str__().toString());
     }
-
 }
