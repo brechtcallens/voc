@@ -134,6 +134,50 @@ public class testTimeDelta {
     }
 
     @Test
+    public void test__sub__Positive() {
+        TimeDelta delta0 = createDelta(1, 2, 3);
+        TimeDelta delta1 = createDelta(4, 5, 6);
+        TimeDelta sum = (TimeDelta) delta1.__sub__(delta0);
+
+        assertEquals("3", sum.days.toString());
+        assertEquals("3", sum.seconds.toString());
+        assertEquals("3", sum.microseconds.toString());
+    }
+
+    @Test
+    public void test__sub__Negative() {
+        TimeDelta delta0 = createDelta(-1, 2, -3);
+        TimeDelta delta1 = createDelta(4, -5, 6);
+        TimeDelta sum = (TimeDelta) delta0.__sub__(delta1);
+
+        assertEquals("-5", sum.days.toString());
+        assertEquals("7", sum.seconds.toString());
+        assertEquals("-9", sum.microseconds.toString());
+    }
+
+    @Test
+    public void test__mul__Int() {
+        TimeDelta delta = createDelta(1, 2, 3);
+        TimeDelta sum = (TimeDelta) delta.__mul__(org.python.types.Int.getInt(5));
+
+        assertEquals("5", sum.days.toString());
+        assertEquals("10", sum.seconds.toString());
+        assertEquals("15", sum.microseconds.toString());
+
+    }
+
+    @Test
+    public void test__mul__Float() {
+        TimeDelta delta = createDelta(1, 2, 3);
+        TimeDelta sum = (TimeDelta) delta.__mul__(new org.python.types.Float(5.8));
+
+        assertEquals("5", sum.days.toString());
+        assertEquals("11", sum.seconds.toString());
+        assertEquals("17", sum.microseconds.toString());
+
+    }
+
+    @Test
     public void test__pos__(){
         TimeDelta delta = createDelta(1, 2, 3);
         TimeDelta copy = (TimeDelta) delta.__pos__();
@@ -151,4 +195,148 @@ public class testTimeDelta {
         TimeDelta delta2 = createDelta(-1, -2, -3);
         assertEquals("days: -1, seconds: -2, microseconds: -3", delta2.__str__().toString());
     }
+
+    @Test
+    public void test__lt__days(){
+        TimeDelta delta1 = createDelta(1, 2, 3);
+        TimeDelta delta2 = createDelta(0, 3, 4);
+
+        assertEquals(org.python.types.Bool.getBool(false), delta1.__lt__(delta2));
+        assertEquals(org.python.types.Bool.getBool(true), delta2.__lt__(delta1));
+    }
+
+    @Test
+    public void test__lt__seconds(){
+        TimeDelta delta1 = createDelta(1, 2, 3);
+        TimeDelta delta2 = createDelta(1, 1, 4);
+
+        assertEquals(org.python.types.Bool.getBool(false), delta1.__lt__(delta2));
+        assertEquals(org.python.types.Bool.getBool(true), delta2.__lt__(delta1));
+    }
+
+    @Test
+    public void test__lt__microseconds(){
+        TimeDelta delta1 = createDelta(1, 1, 2);
+        TimeDelta delta2 = createDelta(1, 1, 1);
+
+        assertEquals(org.python.types.Bool.getBool(false), delta1.__lt__(delta2));
+        assertEquals(org.python.types.Bool.getBool(true), delta2.__lt__(delta1));
+    }
+
+    @Test
+    public void test__le__days(){
+        TimeDelta delta1 = createDelta(1, 2, 3);
+        TimeDelta delta2 = createDelta(0, 3, 4);
+        TimeDelta delta3 = createDelta(1, 2, 3);
+
+        assertEquals(org.python.types.Bool.getBool(false), delta1.__le__(delta2));
+        assertEquals(org.python.types.Bool.getBool(true), delta2.__le__(delta1));
+        assertEquals(org.python.types.Bool.getBool(true), delta1.__le__(delta3));
+    }
+
+    @Test
+    public void test__le__seconds(){
+        TimeDelta delta1 = createDelta(1, 2, 3);
+        TimeDelta delta2 = createDelta(1, 1, 4);
+        TimeDelta delta3 = createDelta(1, 2, 3);
+
+        assertEquals(org.python.types.Bool.getBool(false), delta1.__le__(delta2));
+        assertEquals(org.python.types.Bool.getBool(true), delta2.__le__(delta1));
+        assertEquals(org.python.types.Bool.getBool(true), delta1.__le__(delta3));
+    }
+
+    @Test
+    public void test__le__microseconds(){
+        TimeDelta delta1 = createDelta(1, 1, 2);
+        TimeDelta delta2 = createDelta(1, 1, 1);
+        TimeDelta delta3 = createDelta(1, 1, 2);
+
+        assertEquals(org.python.types.Bool.getBool(false), delta1.__le__(delta2));
+        assertEquals(org.python.types.Bool.getBool(true), delta2.__le__(delta1));
+        assertEquals(org.python.types.Bool.getBool(true), delta1.__le__(delta3));
+    }
+
+    @Test
+    public void test__eq__(){
+        TimeDelta delta1 = createDelta(1, 2, 3);
+        TimeDelta delta2 = createDelta(0, 3, 4);
+        TimeDelta delta3 = createDelta(1, 2, 3);
+
+        assertEquals(org.python.types.Bool.getBool(false), delta1.__eq__(delta2));
+        assertEquals(org.python.types.Bool.getBool(true), delta1.__eq__(delta3));
+    }
+
+    @Test
+    public void test__neq__(){
+        TimeDelta delta1 = createDelta(1, 2, 3);
+        TimeDelta delta2 = createDelta(0, 3, 4);
+        TimeDelta delta3 = createDelta(1, 2, 3);
+
+        assertEquals(org.python.types.Bool.getBool(true), delta1.__neq__(delta2));
+        assertEquals(org.python.types.Bool.getBool(false), delta1.__neq__(delta3));
+    }
+
+
+    @Test
+    public void test__ge__days(){
+        TimeDelta delta1 = createDelta(1, 2, 3);
+        TimeDelta delta2 = createDelta(0, 3, 4);
+        TimeDelta delta3 = createDelta(1, 2, 3);
+
+        assertEquals(org.python.types.Bool.getBool(true), delta1.__ge__(delta2));
+        assertEquals(org.python.types.Bool.getBool(false), delta2.__ge__(delta1));
+        assertEquals(org.python.types.Bool.getBool(true), delta1.__ge__(delta3));
+    }
+
+    @Test
+    public void test__ge__seconds(){
+        TimeDelta delta1 = createDelta(1, 2, 3);
+        TimeDelta delta2 = createDelta(1, 1, 4);
+        TimeDelta delta3 = createDelta(1, 2, 3);
+
+        assertEquals(org.python.types.Bool.getBool(true), delta1.__ge__(delta2));
+        assertEquals(org.python.types.Bool.getBool(false), delta2.__ge__(delta1));
+        assertEquals(org.python.types.Bool.getBool(true), delta1.__ge__(delta3));
+    }
+
+    @Test
+    public void test__ge__microseconds(){
+        TimeDelta delta1 = createDelta(1, 2, 3);
+        TimeDelta delta2 = createDelta(1, 2, 1);
+        TimeDelta delta3 = createDelta(1, 2, 3);
+
+        assertEquals(org.python.types.Bool.getBool(true), delta1.__ge__(delta2));
+        assertEquals(org.python.types.Bool.getBool(false), delta2.__ge__(delta1));
+        assertEquals(org.python.types.Bool.getBool(true), delta1.__ge__(delta3));
+    }
+
+    @Test
+    public void test__gt__days(){
+        TimeDelta delta1 = createDelta(1, 2, 3);
+        TimeDelta delta2 = createDelta(0, 3, 4);
+
+        assertEquals(org.python.types.Bool.getBool(true), delta1.__gt__(delta2));
+        assertEquals(org.python.types.Bool.getBool(false), delta2.__gt__(delta1));
+    }
+
+    @Test
+    public void test__gt__seconds(){
+        TimeDelta delta1 = createDelta(1, 2, 3);
+        TimeDelta delta2 = createDelta(1, 1, 4);
+
+        assertEquals(org.python.types.Bool.getBool(true), delta1.__gt__(delta2));
+        assertEquals(org.python.types.Bool.getBool(false), delta2.__gt__(delta1));
+    }
+
+    @Test
+    public void test__gt__microseconds(){
+        TimeDelta delta1 = createDelta(1, 1, 2);
+        TimeDelta delta2 = createDelta(1, 1, 1);
+
+        assertEquals(org.python.types.Bool.getBool(true), delta1.__gt__(delta2));
+        assertEquals(org.python.types.Bool.getBool(false), delta2.__gt__(delta1));
+    }
+
+
+
 }
