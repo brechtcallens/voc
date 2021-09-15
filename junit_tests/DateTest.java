@@ -47,6 +47,12 @@ public class DateTest {
         assertEquals(5, ((org.python.types.Int) testLeapDay.weekday()).value);
     }
 
+    @Test
+    public void testFromIsoFormat() {
+        org.python.stdlib.datetime.Date testDate = org.python.stdlib.datetime.Date.fromisoformat("2019-12-04");
+        checkDate(testDate, 2019, 12, 4);
+    }
+
     @Nested
     class DateConstructorTest {
         @Test
