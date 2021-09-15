@@ -166,7 +166,22 @@ public class Date extends org.python.types.Object {
 
     @org.python.Method(__doc__ = "")
     public static Date fromisoformat(String s) {
-        return null;
+        // It is assumed that this function will only be called with a
+        // string of length exactly 10, and (though this is not used) ASCII-only
+        int year = Integer.parseInt(s.substring(0, 4));
+        if (s.charAt(4) != '-') {
+            throw new org.python.exceptions.ValueError("Invalid date separator: " + s.charAt(4));
+        }
+
+        int month = Integer.parseInt(s.substring(5, 7));
+        if (s.charAt(7) != '-') {
+            throw new org.python.exceptions.ValueError("Invalid date separator");
+        }
+
+        int day = Integer.parseInt(s.substring(8, 10));
+
+        org.python.Object[] args = {org.python.types.Int.getInt(year), org.python.types.Int.getInt(month), org.python.types.Int.getInt(day)};
+        return new Date(args, java.util.Collections.emptyMap());
     }
 
     private boolean isLeap(long year) {
