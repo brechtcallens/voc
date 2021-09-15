@@ -511,7 +511,7 @@ public class DateTimeTest {
     }
 
     @Test
-    public void TimestampOutOfReach() {
+    public void testTimestampOutOfReach() {
         // The minimum DateTime that will go out of range above max.
         String expectedMessage = "year 10000 is out of range";
         dateTime = new DateTime(new org.python.Object[] {
@@ -541,6 +541,21 @@ public class DateTimeTest {
         }, Collections.emptyMap());
         exception = assertThrows(ValueError.class, () -> {
             dateTime.timestamp();
+        });
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @Test
+    public void testFromtimestamp() {
+        assertEquals(dateTime, DateTime.fromtimestamp(new Float(1631619791.432523)));
+    }
+
+    @Test
+    public void testFromtimestampUnsupportedTypes() {
+        String expectedMessage = "an integer is required (got type str)";
+        Str string = new Str("string");
+        Exception exception = assertThrows(TypeError.class, () -> {
+            DateTime.fromtimestamp(string);
         });
         assertEquals(expectedMessage, exception.getMessage());
     }
