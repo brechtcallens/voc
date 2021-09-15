@@ -55,7 +55,8 @@ public class Date extends org.python.types.Object {
             if ((this.year instanceof org.python.types.Int) && (this.month instanceof org.python.types.Int) && (this.day instanceof org.python.types.Int)) {
                 if (1 <= ((org.python.types.Int) this.year).value && ((org.python.types.Int) this.year).value <= 9999) {
                     if (1d <= ((org.python.types.Int) this.month).value && ((org.python.types.Int) this.month).value <= 12d) {
-                        if (1d <= ((org.python.types.Int) this.day).value && ((org.python.types.Int) this.day).value <= 31d) {
+                        long daysThisMonth = daysInMonth(((org.python.types.Int) this.year).value, ((org.python.types.Int) this.month).value);
+                        if (1d <= ((org.python.types.Int) this.day).value && ((org.python.types.Int) this.day).value <= daysThisMonth) {
                         } else {
                             throw new org.python.exceptions.ValueError("day is out of range for month");
                         }
@@ -153,6 +154,18 @@ public class Date extends org.python.types.Object {
         if (args.length + kwargs.size() == 0) {
             throw new org.python.exceptions.TypeError("function missing required argument 'year' (pos 1)");
         }
+    }
+
+    private boolean isLeap(long year) {
+        return (year % 4 == 0) && (year % 100 != 0 || year % 400 == 0);
+    }
+
+    private long daysInMonth(long year, long month) {
+        long[] daysInMonth = { -1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+        if (month == 2 && isLeap(year)) {
+            return 29;
+        }
+        return daysInMonth[(int) month];
     }
 
     @org.python.Method(__doc__ = "")
