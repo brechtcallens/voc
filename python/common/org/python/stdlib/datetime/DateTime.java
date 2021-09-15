@@ -263,8 +263,9 @@ public class DateTime extends org.python.types.Object {
         if (!(other instanceof org.python.stdlib.datetime.DateTime)) {
             throw new org.python.exceptions.TypeError("'<=' not supported between instances of 'datetime.datetime' and '" + other.typeName() + "'");
         }
-        // TODO: Implement.
-        return null;
+        LocalDateTime localDateTime = this.toLocalDateTime();
+        LocalDateTime otherLocalDateTime = ((DateTime) other).toLocalDateTime();
+        return Bool.getBool(!localDateTime.isAfter(otherLocalDateTime));
     }
 
     @org.python.Method(
@@ -285,8 +286,9 @@ public class DateTime extends org.python.types.Object {
         if (!(other instanceof org.python.stdlib.datetime.DateTime)) {
             throw new org.python.exceptions.TypeError("'>' not supported between instances of 'datetime.datetime' and '" + other.typeName() + "'");
         }
-        // TODO: Implement.
-        return null;
+        LocalDateTime localDateTime = this.toLocalDateTime();
+        LocalDateTime otherLocalDateTime = ((DateTime) other).toLocalDateTime();
+        return Bool.getBool(localDateTime.isAfter(otherLocalDateTime));
     }
 
     @org.python.Method(
@@ -297,7 +299,8 @@ public class DateTime extends org.python.types.Object {
         if (!(other instanceof org.python.stdlib.datetime.DateTime)) {
             throw new org.python.exceptions.TypeError("'>=' not supported between instances of 'datetime.datetime' and '" + other.typeName() + "'");
         }
-        // TODO: Implement.
-        return null;
+        LocalDateTime localDateTime = this.toLocalDateTime();
+        LocalDateTime otherLocalDateTime = ((DateTime) other).toLocalDateTime();
+        return Bool.getBool(!localDateTime.isBefore(otherLocalDateTime));
     }
 }
