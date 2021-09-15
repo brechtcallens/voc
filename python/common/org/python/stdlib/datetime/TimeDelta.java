@@ -150,6 +150,10 @@ public class TimeDelta extends org.python.types.Object {
         long sum_seconds = days + (((org.python.types.Int) this.seconds).value);
         long microseconds = (((org.python.types.Int) this.microseconds).value);
         String micro = "";
+        if(microseconds < 0) {
+            sum_seconds--;
+            microseconds = 1000000 + microseconds;
+        }
         if (microseconds == 0) {
             micro = "0";
         } else if (microseconds < 10) {
