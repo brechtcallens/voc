@@ -68,13 +68,13 @@ public class Date extends org.python.types.Object {
                 }
             } else {
                 if (!(this.year instanceof org.python.types.Int)) {
-                    throw new org.python.exceptions.TypeError("integer argument expected, got " + this.year.typeName());
+                    throw new org.python.exceptions.TypeError("an integer is required (got type " + this.year.typeName() + ")");
                 }
                 if (!(this.month instanceof org.python.types.Int)) {
-                    throw new org.python.exceptions.TypeError("integer argument expected, got " + this.month.typeName());
+                    throw new org.python.exceptions.TypeError("an integer is required (got type " + this.month.typeName() + ")");
                 }
                 if (!(this.day instanceof org.python.types.Int)) {
-                    throw new org.python.exceptions.TypeError("integer argument expected, got " + this.day.typeName());
+                    throw new org.python.exceptions.TypeError("an integer is required (got type " + this.day.typeName() + ")");
                 }
             }
         }
