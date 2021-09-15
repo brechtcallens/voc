@@ -2,13 +2,17 @@ package org.python.stdlib.datetime;
 
 import org.python.types.Bool;
 import org.python.types.Float;
+import org.python.types.Int;
 import org.python.types.Object;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.temporal.WeekFields;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 
 public class DateTime extends org.python.types.Object {
@@ -330,5 +334,26 @@ public class DateTime extends org.python.types.Object {
 
         double epochSeconds = localDateTime.atZone(ZoneId.systemDefault()).toEpochSecond();
         return new Float(epochSeconds + (double)localDateTime.getNano() / 1e9);
+    }
+
+    public static org.python.Object fromtimestamp(org.python.Object timestamp) { // TODO: tz arg
+        if (!(timestamp instanceof org.python.types.Float) && !(timestamp instanceof org.python.types.Int)) {
+            throw new org.python.exceptions.TypeError("an integer is required (got type " + timestamp.typeName() + ")");
+        }
+
+        long timestampSeconds = (long) ((Float) timestamp).value;
+        long timestampNano = 1000 * (long) (((Float) timestamp).value * 1e6 % 1e6);
+        Instant instant = Instant.ofEpochSecond(timestampSeconds, timestampNano);
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+
+        return new DateTime(new org.python.Object[] {
+            Int.getInt(localDateTime.getYear()),
+            Int.getInt(localDateTime.getMonthValue()),
+            Int.getInt(localDateTime.getDayOfMonth()),
+            Int.getInt(localDateTime.getHour()),
+            Int.getInt(localDateTime.getMinute()),
+            Int.getInt(localDateTime.getSecond()),
+            Int.getInt(localDateTime.getNano() / 1000)
+        }, Collections.emptyMap());
     }
 }
