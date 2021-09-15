@@ -5,9 +5,38 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class DateTest {
 
+    @Test
+    public void testDateConstructor_NoArgs() {
+        Throwable t = assertThrows(org.python.exceptions.TypeError.class, () -> new org.python.stdlib.datetime.Date(new Object[]{}, Collections.emptyMap()));
+        assertEquals("function missing required argument 'year' (pos 1)", t.getMessage());
+    }
+
+    @Test
+    public void testDateConstructor_TooManyArgs() {
+        org.python.Object[] args = {org.python.types.Int.getInt(1), org.python.types.Int.getInt(2)};
+        HashMap<String, org.python.Object> kwargs = new HashMap<>();
+        kwargs.put("month", org.python.types.Int.getInt(9));
+        kwargs.put("day", org.python.types.Int.getInt(13));
+        Throwable t = assertThrows(org.python.exceptions.TypeError.class, () -> new org.python.stdlib.datetime.Date(args, kwargs));
+        assertEquals("function takes at most 3 arguments (4 given)", t.getMessage());
+    }
+
+    @Test
+    public void testDateConstrutor_InvalidDayForMonth() {
+        org.python.Object[] args = {org.python.types.Int.getInt(2021), org.python.types.Int.getInt(2), org.python.types.Int.getInt((29))};
+        Throwable t = assertThrows(org.python.exceptions.ValueError.class, () -> new org.python.stdlib.datetime.Date(args, Collections.emptyMap()));
+        assertEquals("day is out of range for month", t.getMessage());
+    }
+
+    @Test
+    public void testDateConstrutor_ValidDayForMonth() {
+        org.python.Object[] args = {org.python.types.Int.getInt(2020), org.python.types.Int.getInt(2), org.python.types.Int.getInt((29))};
+        new org.python.stdlib.datetime.Date(args, Collections.emptyMap());
+    }
 
     @Test
     public void testCTime() {
