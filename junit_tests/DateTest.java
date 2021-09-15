@@ -49,7 +49,7 @@ public class DateTest {
 
     @Test
     public void testFromIsoFormat() {
-        org.python.stdlib.datetime.Date testDate = org.python.stdlib.datetime.Date.fromisoformat("2019-12-04");
+        org.python.stdlib.datetime.Date testDate = org.python.stdlib.datetime.Date.fromisoformat(new org.python.types.Str("2019-12-04"));
         checkDate(testDate, 2019, 12, 4);
     }
 

@@ -164,10 +164,11 @@ public class Date extends org.python.types.Object {
         }
     }
 
-    @org.python.Method(__doc__ = "")
-    public static Date fromisoformat(String s) {
+    @org.python.Method(__doc__ = "", args = {"dtstr"})
+    public static Date fromisoformat(org.python.Object dtstr) {
         // It is assumed that this function will only be called with a
         // string of length exactly 10, and (though this is not used) ASCII-only
+        String s = ((org.python.types.Str) dtstr).value;
         int year = Integer.parseInt(s.substring(0, 4));
         if (s.charAt(4) != '-') {
             throw new org.python.exceptions.ValueError("Invalid date separator: " + s.charAt(4));
