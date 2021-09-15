@@ -41,7 +41,8 @@ public class DateTest {
     @Test
     public void testDateConstrutor_ValidDayForMonth() {
         org.python.Object[] args = {org.python.types.Int.getInt(2020), org.python.types.Int.getInt(2), org.python.types.Int.getInt((29))};
-        new org.python.stdlib.datetime.Date(args, Collections.emptyMap());
+        org.python.stdlib.datetime.Date testedDate = new org.python.stdlib.datetime.Date(args, Collections.emptyMap());
+        checkDate(testedDate, 2020, 2, 29);
     }
 
     @Test
@@ -65,8 +66,8 @@ public class DateTest {
         HashMap<String, org.python.Object> kwargs = new HashMap<>();
         kwargs.put("foo", org.python.types.Int.getInt(4));
 
-        Throwable t3 = assertThrows(org.python.exceptions.TypeError.class, () -> new org.python.stdlib.datetime.Date(args, kwargs));
-        assertEquals("function missing required argument 'day' (pos 3)", t3.getMessage());
+        Throwable t = assertThrows(org.python.exceptions.TypeError.class, () -> new org.python.stdlib.datetime.Date(args, kwargs));
+        assertEquals("function missing required argument 'day' (pos 3)", t.getMessage());
     }
 
     @Test
@@ -109,7 +110,7 @@ public class DateTest {
     public void testToday() {
         org.python.stdlib.datetime.Date testedToday = (org.python.stdlib.datetime.Date) org.python.stdlib.datetime.Date.today();
 
-        java.time.LocalDateTime realToday = java.time.LocalDateTime.now();
+        LocalDateTime realToday = LocalDateTime.now();
 
         assertEquals(realToday.getYear(), ((org.python.types.Int) testedToday.year).value);
         assertEquals(realToday.getMonthValue(), ((org.python.types.Int) testedToday.month).value);
