@@ -48,9 +48,26 @@ public class DateTest {
     }
 
     @Test
-    public void testFromIsoFormat() {
+    public void testFromIsoFormat_Correct() {
         org.python.stdlib.datetime.Date testDate = org.python.stdlib.datetime.Date.fromisoformat(new org.python.types.Str("2019-12-04"));
         checkDate(testDate, 2019, 12, 4);
+    }
+
+    @Test
+    public void testFromIsoFormat_WrongType() {
+        Throwable t = assertThrows(org.python.exceptions.TypeError.class, () -> org.python.stdlib.datetime.Date.fromisoformat(org.python.types.Int.getInt(2019)));
+        assertEquals("fromisoformat: argument must be str", t.getMessage());
+    }
+    @Test
+    public void testFromIsoFormat_WrongFormat() {
+        Throwable t = assertThrows(org.python.exceptions.ValueError.class, () -> org.python.stdlib.datetime.Date.fromisoformat(new org.python.types.Str("2019/12/04")));
+        assertEquals("Invalid isoformat string: '2019/12/04'", t.getMessage());
+
+        Throwable t2 = assertThrows(org.python.exceptions.ValueError.class, () -> org.python.stdlib.datetime.Date.fromisoformat(new org.python.types.Str("2019ab123")));
+        assertEquals("Invalid isoformat string: '2019ab123'", t2.getMessage());
+
+        Throwable t3 = assertThrows(org.python.exceptions.ValueError.class, () -> org.python.stdlib.datetime.Date.fromisoformat(new org.python.types.Str("2019-12+30")));
+        assertEquals("Invalid isoformat string: '2019-12+30'", t3.getMessage());
     }
 
     @Nested

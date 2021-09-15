@@ -168,21 +168,28 @@ public class Date extends org.python.types.Object {
     public static Date fromisoformat(org.python.Object dtstr) {
         // It is assumed that this function will only be called with a
         // string of length exactly 10, and (though this is not used) ASCII-only
+        if (!(dtstr instanceof org.python.types.Str)) {
+            throw new org.python.exceptions.TypeError("fromisoformat: argument must be str");
+        }
         String s = ((org.python.types.Str) dtstr).value;
-        int year = Integer.parseInt(s.substring(0, 4));
-        if (s.charAt(4) != '-') {
-            throw new org.python.exceptions.ValueError("Invalid date separator: " + s.charAt(4));
+        try {
+            int year = Integer.parseInt(s.substring(0, 4));
+            if (s.charAt(4) != '-') {
+                throw new org.python.exceptions.ValueError("Invalid date separator: " + s.charAt(4));
+            }
+
+            int month = Integer.parseInt(s.substring(5, 7));
+            if (s.charAt(7) != '-') {
+                throw new org.python.exceptions.ValueError("Invalid date separator");
+            }
+
+            int day = Integer.parseInt(s.substring(8, 10));
+
+            org.python.Object[] args = {org.python.types.Int.getInt(year), org.python.types.Int.getInt(month), org.python.types.Int.getInt(day)};
+            return new Date(args, java.util.Collections.emptyMap());
+        } catch (Exception ex) {
+            throw new org.python.exceptions.ValueError("Invalid isoformat string: '" + dtstr + "'");
         }
-
-        int month = Integer.parseInt(s.substring(5, 7));
-        if (s.charAt(7) != '-') {
-            throw new org.python.exceptions.ValueError("Invalid date separator");
-        }
-
-        int day = Integer.parseInt(s.substring(8, 10));
-
-        org.python.Object[] args = {org.python.types.Int.getInt(year), org.python.types.Int.getInt(month), org.python.types.Int.getInt(day)};
-        return new Date(args, java.util.Collections.emptyMap());
     }
 
     private boolean isLeap(long year) {
