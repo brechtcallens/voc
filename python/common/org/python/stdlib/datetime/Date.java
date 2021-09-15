@@ -192,6 +192,11 @@ public class Date extends org.python.types.Object {
         }
     }
 
+    @org.python.Method(__doc__ = "")
+    public org.python.Object isoformat() {
+        return null;
+    }
+
     private boolean isLeap(long year) {
         return (year % 4 == 0) && (year % 100 != 0 || year % 400 == 0);
     }

@@ -70,6 +70,20 @@ public class DateTest {
         assertEquals("Invalid isoformat string: '2019-12+30'", t3.getMessage());
     }
 
+    @Test
+    public void testIsoFormat() {
+        org.python.Object[] args = {org.python.types.Int.getInt(2021), org.python.types.Int.getInt(2), org.python.types.Int.getInt(12)};
+        org.python.stdlib.datetime.Date testDate = new org.python.stdlib.datetime.Date(args, Collections.emptyMap());
+        assertEquals("2021-02-12",((org.python.types.Str) testDate.isoformat()).value);
+    }
+
+    @Test
+    public void testIsoFormat_Padding() {
+        org.python.Object[] args = {org.python.types.Int.getInt(1), org.python.types.Int.getInt(1), org.python.types.Int.getInt(1)};
+        org.python.stdlib.datetime.Date testDate = new org.python.stdlib.datetime.Date(args, Collections.emptyMap());
+        assertEquals("0001-01-01",((org.python.types.Str) testDate.isoformat()).value);
+    }
+
     @Nested
     class DateConstructorTest {
         @Test
