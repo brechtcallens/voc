@@ -5,6 +5,7 @@ import org.python.exceptions.TypeError;
 import org.python.exceptions.ValueError;
 import org.python.stdlib.datetime.DateTime;
 import org.python.types.Bool;
+import org.python.types.Float;
 import org.python.types.Int;
 import org.python.types.Str;
 
@@ -286,53 +287,6 @@ public class DateTimeTest {
     }
 
     @Test
-    public void testLtExpectTrue() {
-        DateTime dateTimeLesser = (DateTime) DateTime.min;
-        DateTime dateTimeGreater;
-        org.python.Object[] args = new org.python.Object[] {
-            Int.getInt(1),
-            Int.getInt(1),
-            Int.getInt(1),
-            Int.getInt(1),
-            Int.getInt(1),
-            Int.getInt(1),
-            Int.getInt(1)
-        };
-
-        for (int i = 0; i < 7; i++) {
-            args[i] = Int.getInt(2);
-            dateTimeGreater = new DateTime(args, Collections.emptyMap());
-            assertEquals((Bool) dateTimeLesser.__lt__(dateTimeGreater).__bool__(), Bool.getBool(true));
-            args[i] = Int.getInt(1);
-        }
-    }
-
-    @Test
-    public void testLtExpectFalse() {
-        DateTime dateTimeLesser = (DateTime) DateTime.min;
-        DateTime dateTimeGreater;
-        org.python.Object[] args = new org.python.Object[] {
-            Int.getInt(1),
-            Int.getInt(1),
-            Int.getInt(1),
-            Int.getInt(1),
-            Int.getInt(1),
-            Int.getInt(1),
-            Int.getInt(1)
-        };
-
-        dateTimeGreater = new DateTime(args, Collections.emptyMap());
-        assertEquals((Bool) dateTimeGreater.__lt__(dateTimeLesser).__bool__(), Bool.getBool(false));
-
-        for (int i = 0; i < 7; i++) {
-            args[i] = Int.getInt(2);
-            dateTimeGreater = new DateTime(args, Collections.emptyMap());
-            assertEquals((Bool) dateTimeGreater.__lt__(dateTimeLesser).__bool__(), Bool.getBool(false));
-            args[i] = Int.getInt(1);
-        }
-    }
-
-    @Test
     public void testLtUnsupportedTypes() {
         String expectedMessage = "'<' not supported between instances of 'datetime.datetime' and 'str'";
         Str string = new Str("string");
@@ -345,6 +299,85 @@ public class DateTimeTest {
         Int integer = Int.getInt(1);
         exception = assertThrows(TypeError.class, () -> {
             dateTime.__lt__(integer);
+        });
+        assertEquals(expectedMessage, exception.getMessage());
+
+        expectedMessage = "'<' not supported between instances of 'datetime.datetime' and 'float'";
+        Float fl = new Float(1.0);
+        exception = assertThrows(TypeError.class, () -> {
+            dateTime.__lt__(fl);
+        });
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @Test
+    public void testLeUnsupportedTypes() {
+        String expectedMessage = "'<=' not supported between instances of 'datetime.datetime' and 'str'";
+        Str string = new Str("string");
+        Exception exception = assertThrows(TypeError.class, () -> {
+            dateTime.__le__(string);
+        });
+        assertEquals(expectedMessage, exception.getMessage());
+
+        expectedMessage = "'<=' not supported between instances of 'datetime.datetime' and 'int'";
+        Int integer = Int.getInt(1);
+        exception = assertThrows(TypeError.class, () -> {
+            dateTime.__le__(integer);
+        });
+        assertEquals(expectedMessage, exception.getMessage());
+
+        expectedMessage = "'<=' not supported between instances of 'datetime.datetime' and 'float'";
+        Float fl = new Float(1.0);
+        exception = assertThrows(TypeError.class, () -> {
+            dateTime.__le__(fl);
+        });
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @Test
+    public void testGtUnsupportedTypes() {
+        String expectedMessage = "'>' not supported between instances of 'datetime.datetime' and 'str'";
+        Str string = new Str("string");
+        Exception exception = assertThrows(TypeError.class, () -> {
+            dateTime.__gt__(string);
+        });
+        assertEquals(expectedMessage, exception.getMessage());
+
+        expectedMessage = "'>' not supported between instances of 'datetime.datetime' and 'int'";
+        Int integer = Int.getInt(1);
+        exception = assertThrows(TypeError.class, () -> {
+            dateTime.__gt__(integer);
+        });
+        assertEquals(expectedMessage, exception.getMessage());
+
+        expectedMessage = "'>' not supported between instances of 'datetime.datetime' and 'float'";
+        Float fl = new Float(1.0);
+        exception = assertThrows(TypeError.class, () -> {
+            dateTime.__gt__(fl);
+        });
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @Test
+    public void testGeUnsupportedTypes() {
+        String expectedMessage = "'>=' not supported between instances of 'datetime.datetime' and 'str'";
+        Str string = new Str("string");
+        Exception exception = assertThrows(TypeError.class, () -> {
+            dateTime.__ge__(string);
+        });
+        assertEquals(expectedMessage, exception.getMessage());
+
+        expectedMessage = "'>=' not supported between instances of 'datetime.datetime' and 'int'";
+        Int integer = Int.getInt(1);
+        exception = assertThrows(TypeError.class, () -> {
+            dateTime.__ge__(integer);
+        });
+        assertEquals(expectedMessage, exception.getMessage());
+
+        expectedMessage = "'>=' not supported between instances of 'datetime.datetime' and 'float'";
+        Float fl = new Float(1.0);
+        exception = assertThrows(TypeError.class, () -> {
+            dateTime.__ge__(fl);
         });
         assertEquals(expectedMessage, exception.getMessage());
     }
