@@ -273,9 +273,12 @@ public class DateTime extends org.python.types.Object {
         args = {"other"}
     )
     public org.python.Object __eq__(org.python.Object other) {
-        // TODO: Type check.
-        // TODO: Implement.
-        return null;
+        if (!(other instanceof org.python.stdlib.datetime.DateTime)) {
+            return Bool.getBool(false);
+        }
+        LocalDateTime localDateTime = this.toLocalDateTime();
+        LocalDateTime otherLocalDateTime = ((DateTime) other).toLocalDateTime();
+        return Bool.getBool(!localDateTime.isBefore(otherLocalDateTime) && !otherLocalDateTime.isBefore(localDateTime));
     }
 
     @org.python.Method(

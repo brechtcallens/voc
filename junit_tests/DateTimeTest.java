@@ -379,6 +379,32 @@ public class DateTimeTest {
     }
 
     @Test
+    public void testEqCombinations() {
+        List<DateTime> sortedDateTimes = getSortedDateTimes();
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 7; j++) {
+                if (i == j) {
+                    assertEquals(Bool.getBool(true), sortedDateTimes.get(i).__eq__(sortedDateTimes.get(j)));
+                } else {
+                    assertEquals(Bool.getBool(false), sortedDateTimes.get(i).__eq__(sortedDateTimes.get(j)));
+                }
+            }
+        }
+    }
+
+    @Test
+    public void testEqUnsupportedTypes() {
+        Str string = new Str("string");
+        assertEquals(Bool.getBool(false), dateTime.__eq__(string));
+
+        Int integer = Int.getInt(1);
+        assertEquals(Bool.getBool(false), dateTime.__eq__(string));
+
+        Float fl = new Float(1.0);
+        assertEquals(Bool.getBool(false), dateTime.__eq__(string));
+    }
+
+    @Test
     public void testGtCombinations() {
         List<DateTime> sortedDateTimes = getSortedDateTimes();
         for (int i = 0; i < 7; i++) {
