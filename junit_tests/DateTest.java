@@ -1,8 +1,21 @@
 import org.junit.jupiter.api.Test;
+import org.python.Object;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DateTest {
+
+
+    @Test
+    public void testCTime() {
+        org.python.Object[] args = {org.python.types.Int.getInt(2021), org.python.types.Int.getInt(9), org.python.types.Int.getInt(15)};
+        org.python.stdlib.datetime.Date testDate = new org.python.stdlib.datetime.Date(args, Collections.emptyMap());
+
+        assertEquals("Wed Sep 15 00:00:00 2021", ((org.python.types.Str) testDate.ctime()).value);
+    }
 
     @Test
     public void testToday() {
