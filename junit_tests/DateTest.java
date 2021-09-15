@@ -28,4 +28,15 @@ public class DateTest {
         assertEquals(realToday.getDayOfMonth(), ((org.python.types.Int) testedToday.day).value);
     }
 
+    @Test
+    public void testWeekday() {
+        org.python.Object[] args = {org.python.types.Int.getInt(2021), org.python.types.Int.getInt(9), org.python.types.Int.getInt(15)};
+        org.python.stdlib.datetime.Date testDate = new org.python.stdlib.datetime.Date(args, Collections.emptyMap());
+        assertEquals(2, ((org.python.types.Int) testDate.weekday()).value);
+
+        org.python.Object[] args2 = {org.python.types.Int.getInt(2020), org.python.types.Int.getInt(2), org.python.types.Int.getInt(29)};
+        org.python.stdlib.datetime.Date testLeapDay = new org.python.stdlib.datetime.Date(args2, Collections.emptyMap());
+        assertEquals(5, ((org.python.types.Int) testLeapDay.weekday()).value);
+    }
+
 }
