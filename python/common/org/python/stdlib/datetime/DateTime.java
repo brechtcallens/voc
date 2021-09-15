@@ -1,9 +1,12 @@
 package org.python.stdlib.datetime;
 
 import org.python.types.Bool;
+import org.python.types.Float;
 import org.python.types.Object;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
@@ -305,5 +308,27 @@ public class DateTime extends org.python.types.Object {
         LocalDateTime localDateTime = this.toLocalDateTime();
         LocalDateTime otherLocalDateTime = ((DateTime) other).toLocalDateTime();
         return Bool.getBool(!localDateTime.isBefore(otherLocalDateTime));
+    }
+
+    @org.python.Method(
+        __doc__ = "Return POSIX timestamp corresponding to the datetime instance. The return value is a float similar " +
+            "to that returned by time.time(). Naive datetime instances are assumed to represent local time and this " +
+            "method relies on the platform C mktime() function to perform the conversion. Since datetime supports wider " +
+            "range of values than mktime() on many platforms, this method may raise OverflowError for times far in the " +
+            "past or far in the future."
+    )
+    public org.python.Object timestamp() {
+        LocalDateTime maxAllowedLocalDateTime = LocalDateTime.of(9999, 12, 31, 22, 59, 59, 999999999);
+        LocalDateTime minAllowedLocalDateTime = LocalDateTime.of(1, 1, 2, 0, 0, 0, 0);
+        LocalDateTime localDateTime = this.toLocalDateTime();
+
+        if (localDateTime.isAfter(maxAllowedLocalDateTime)) {
+            throw new org.python.exceptions.ValueError("year " + (localDateTime.getYear()+1) + " is out of range");
+        } else if (localDateTime.isBefore(minAllowedLocalDateTime)) {
+            throw new org.python.exceptions.ValueError("year " + (localDateTime.getYear()-1) + " is out of range");
+        }
+
+        double epochSeconds = localDateTime.atZone(ZoneId.systemDefault()).toEpochSecond();
+        return new Float(epochSeconds + (double)localDateTime.getNano() / 1e9);
     }
 }
