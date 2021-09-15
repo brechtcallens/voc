@@ -9,9 +9,7 @@ import org.python.types.Float;
 import org.python.types.Int;
 import org.python.types.Str;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -286,6 +284,38 @@ public class DateTimeTest {
         assertEquals(expectedMessage, exception.getMessage());
     }
 
+    private List<DateTime> getSortedDateTimes() {
+        List<DateTime> sortedDateTimes = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            sortedDateTimes.add(
+                new DateTime(new Object[] {
+                    Int.getInt(1 + (i == 6 ? 1 : 0)),
+                    Int.getInt(1 + (i == 5 ? 1 : 0)),
+                    Int.getInt(1 + (i == 4 ? 1 : 0)),
+                    Int.getInt(1 + (i == 3 ? 1 : 0)),
+                    Int.getInt(1 + (i == 2 ? 1 : 0)),
+                    Int.getInt(1 + (i == 1 ? 1 : 0)),
+                    Int.getInt(1 + (i == 0 ? 1 : 0)),
+                }, Collections.emptyMap())
+            );
+        }
+        return sortedDateTimes;
+    }
+
+    @Test
+    public void testLtCombinations() {
+        List<DateTime> sortedDateTimes = getSortedDateTimes();
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 7; j++) {
+                if (i < j) {
+                    assertEquals(Bool.getBool(true), sortedDateTimes.get(i).__lt__(sortedDateTimes.get(j)));
+                } else {
+                    assertEquals(Bool.getBool(false), sortedDateTimes.get(i).__lt__(sortedDateTimes.get(j)));
+                }
+            }
+        }
+    }
+
     @Test
     public void testLtUnsupportedTypes() {
         String expectedMessage = "'<' not supported between instances of 'datetime.datetime' and 'str'";
@@ -308,6 +338,20 @@ public class DateTimeTest {
             dateTime.__lt__(fl);
         });
         assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @Test
+    public void testLeCombinations() {
+        List<DateTime> sortedDateTimes = getSortedDateTimes();
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 7; j++) {
+                if (i <= j) {
+                    assertEquals(Bool.getBool(true), sortedDateTimes.get(i).__le__(sortedDateTimes.get(j)));
+                } else {
+                    assertEquals(Bool.getBool(false), sortedDateTimes.get(i).__le__(sortedDateTimes.get(j)));
+                }
+            }
+        }
     }
 
     @Test
@@ -335,6 +379,20 @@ public class DateTimeTest {
     }
 
     @Test
+    public void testGtCombinations() {
+        List<DateTime> sortedDateTimes = getSortedDateTimes();
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 7; j++) {
+                if (i > j) {
+                    assertEquals(Bool.getBool(true), sortedDateTimes.get(i).__gt__(sortedDateTimes.get(j)));
+                } else {
+                    assertEquals(Bool.getBool(false), sortedDateTimes.get(i).__gt__(sortedDateTimes.get(j)));
+                }
+            }
+        }
+    }
+
+    @Test
     public void testGtUnsupportedTypes() {
         String expectedMessage = "'>' not supported between instances of 'datetime.datetime' and 'str'";
         Str string = new Str("string");
@@ -356,6 +414,20 @@ public class DateTimeTest {
             dateTime.__gt__(fl);
         });
         assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @Test
+    public void testGeCombinations() {
+        List<DateTime> sortedDateTimes = getSortedDateTimes();
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 7; j++) {
+                if (i >= j) {
+                    assertEquals(Bool.getBool(true), sortedDateTimes.get(i).__ge__(sortedDateTimes.get(j)));
+                } else {
+                    assertEquals(Bool.getBool(false), sortedDateTimes.get(i).__ge__(sortedDateTimes.get(j)));
+                }
+            }
+        }
     }
 
     @Test
