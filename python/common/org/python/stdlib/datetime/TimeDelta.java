@@ -37,6 +37,12 @@ public class TimeDelta extends org.python.types.Object {
         }
 
         String[] allowed = {"days", "seconds", "microseconds", "milliseconds", "minutes", "hours", "weeks"};
+        for(int i = 0; i < args.length; i++) {
+            if (!(args[i] instanceof org.python.types.Int) && !(args[i] instanceof org.python.types.Float)){
+                throw new org.python.exceptions.TypeError("unsupported type for timedelta " + allowed[i] + " component: " + args[i].typeName());
+            }
+        }
+
         List<String> allowedList = Arrays.asList(allowed);
         if (!kwargs.isEmpty()) {
             boolean correct = true;

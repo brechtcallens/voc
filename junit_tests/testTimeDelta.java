@@ -59,11 +59,11 @@ public class testTimeDelta {
     @Test
     public void testConstructorBadArguments() {
         org.python.Object[] args = new org.python.Object[]{org.python.types.Bool.getBool(false)};
-        Exception exception = assertThrows(org.python.exceptions.TypeError.class, () -> {   //fails, no error is thrown
+        Exception exception = assertThrows(org.python.exceptions.TypeError.class, () -> {
             TimeDelta delta = new TimeDelta(args, empty_kwargs);
         });
 
-        //assertEquals("__new__() takes at most 7 arguments (8 given)", exception.getMessage());
+        assertEquals("unsupported type for timedelta days component: bool", exception.getMessage());
     }
 
     @Test
