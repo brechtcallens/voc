@@ -1,7 +1,9 @@
 package org.python.stdlib.datetime;
 
+import org.python.types.Bool;
 import org.python.types.Object;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
@@ -240,7 +242,13 @@ public class DateTime extends org.python.types.Object {
         args = {"other"}
     )
     public org.python.Object __lt__(org.python.Object other) {
-        return null;
+        if (!(other instanceof org.python.stdlib.datetime.DateTime)) {
+            throw new org.python.exceptions.TypeError("'<' not supported between instances of 'datetime.datetime' and '" + other.typeName() + "'");
+        }
+        DateTime otherDateTime = (DateTime) other;
+        LocalDateTime localDateTime = LocalDateTime.parse(this.__str__().value.replace(" ", "T"));
+        LocalDateTime otherLocalDateTime = LocalDateTime.parse(otherDateTime.__str__().value.replace(" ", "T"));
+        return Bool.getBool(localDateTime.isBefore(otherLocalDateTime));
     }
 
     @org.python.Method(
