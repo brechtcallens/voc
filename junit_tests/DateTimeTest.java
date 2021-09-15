@@ -4,6 +4,7 @@ import org.python.Object;
 import org.python.exceptions.TypeError;
 import org.python.exceptions.ValueError;
 import org.python.stdlib.datetime.DateTime;
+import org.python.types.Bool;
 import org.python.types.Int;
 import org.python.types.Str;
 
@@ -11,8 +12,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DateTimeTest {
     private DateTime dateTime;
@@ -226,7 +226,7 @@ public class DateTimeTest {
     }
 
     @Test
-    public void testConstructor() {
+    public void testConstructorMissingRequiredArguments() {
         String expectedMessage = "function missing required argument 'year' (pos 1)";
         org.python.Object[] args0 = {};
         Exception exception = assertThrows(TypeError.class, () -> {
@@ -281,6 +281,70 @@ public class DateTimeTest {
         kwargs.put("invalid", Int.getInt(1));
         Exception exception = assertThrows(TypeError.class, () -> {
             new DateTime(args, kwargs);
+        });
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @Test
+    public void testLtExpectTrue() {
+        DateTime dateTimeLesser = (DateTime) DateTime.min;
+        DateTime dateTimeGreater;
+        org.python.Object[] args = new org.python.Object[] {
+            Int.getInt(1),
+            Int.getInt(1),
+            Int.getInt(1),
+            Int.getInt(1),
+            Int.getInt(1),
+            Int.getInt(1),
+            Int.getInt(1)
+        };
+
+        for (int i = 0; i < 7; i++) {
+            args[i] = Int.getInt(2);
+            dateTimeGreater = new DateTime(args, Collections.emptyMap());
+            assertEquals((Bool) dateTimeLesser.__lt__(dateTimeGreater).__bool__(), Bool.getBool(true));
+            args[i] = Int.getInt(1);
+        }
+    }
+
+    @Test
+    public void testLtExpectFalse() {
+        DateTime dateTimeLesser = (DateTime) DateTime.min;
+        DateTime dateTimeGreater;
+        org.python.Object[] args = new org.python.Object[] {
+            Int.getInt(1),
+            Int.getInt(1),
+            Int.getInt(1),
+            Int.getInt(1),
+            Int.getInt(1),
+            Int.getInt(1),
+            Int.getInt(1)
+        };
+
+        dateTimeGreater = new DateTime(args, Collections.emptyMap());
+        assertEquals((Bool) dateTimeGreater.__lt__(dateTimeLesser).__bool__(), Bool.getBool(false));
+
+        for (int i = 0; i < 7; i++) {
+            args[i] = Int.getInt(2);
+            dateTimeGreater = new DateTime(args, Collections.emptyMap());
+            assertEquals((Bool) dateTimeGreater.__lt__(dateTimeLesser).__bool__(), Bool.getBool(false));
+            args[i] = Int.getInt(1);
+        }
+    }
+
+    @Test
+    public void testLtUnsupportedTypes() {
+        String expectedMessage = "'<' not supported between instances of 'datetime.datetime' and 'str'";
+        Str string = new Str("string");
+        Exception exception = assertThrows(TypeError.class, () -> {
+            dateTime.__lt__(string);
+        });
+        assertEquals(expectedMessage, exception.getMessage());
+
+        expectedMessage = "'<' not supported between instances of 'datetime.datetime' and 'int'";
+        Int integer = Int.getInt(1);
+        exception = assertThrows(TypeError.class, () -> {
+            dateTime.__lt__(integer);
         });
         assertEquals(expectedMessage, exception.getMessage());
     }
