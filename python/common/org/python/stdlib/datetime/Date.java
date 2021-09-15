@@ -110,14 +110,14 @@ public class Date extends org.python.types.Object {
             String d = this.day + "";
 
             if (!y.equals("null") && !(this.year instanceof org.python.types.Int)) {
-                throw new org.python.exceptions.TypeError("integer argument expected, got " + this.year.typeName());
+                throw new org.python.exceptions.TypeError("an integer is required (got type " + this.year.typeName() + ")");
             }
             if (kwargs.get("year") != null && args.length > 0) {
                 throw new org.python.exceptions.SyntaxError("positional argument follows keyword argument");
             }
 
             if (!(this.month instanceof org.python.types.Int) && !m.equals("null")) {
-                throw new org.python.exceptions.TypeError("integer argument expected, got " + this.month.typeName());
+                throw new org.python.exceptions.TypeError("an integer is required (got type " + this.month.typeName() + ")");
             }
 
             if (y.equals("null")) {
@@ -149,7 +149,7 @@ public class Date extends org.python.types.Object {
             String d = this.day + "";
 
             if (!(this.year instanceof org.python.types.Int) && !y.equals("null")) {
-                throw new org.python.exceptions.TypeError("integer argument expected, got " + this.year.typeName());
+                throw new org.python.exceptions.TypeError("an integer is required (got type " + this.year.typeName() + ")");
             }
             if (!y.equals("null")) {
                 throw new org.python.exceptions.TypeError("function missing required argument 'month' (pos 2)");
