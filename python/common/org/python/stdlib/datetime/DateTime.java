@@ -237,6 +237,11 @@ public class DateTime extends org.python.types.Object {
         return org.python.types.Int.getInt(convertToPython[day - 1]);
     }
 
+    @org.python.Method(__doc__ = "")
+    private LocalDateTime toLocalDateTime() {
+        return LocalDateTime.parse(this.__str__().value.replace(" ", "T"));
+    }
+
     @org.python.Method(
         __doc__ = "Return self<value.",
         args = {"other"}
@@ -245,9 +250,8 @@ public class DateTime extends org.python.types.Object {
         if (!(other instanceof org.python.stdlib.datetime.DateTime)) {
             throw new org.python.exceptions.TypeError("'<' not supported between instances of 'datetime.datetime' and '" + other.typeName() + "'");
         }
-        DateTime otherDateTime = (DateTime) other;
-        LocalDateTime localDateTime = LocalDateTime.parse(this.__str__().value.replace(" ", "T"));
-        LocalDateTime otherLocalDateTime = LocalDateTime.parse(otherDateTime.__str__().value.replace(" ", "T"));
+        LocalDateTime localDateTime = this.toLocalDateTime();
+        LocalDateTime otherLocalDateTime = ((DateTime) other).toLocalDateTime();
         return Bool.getBool(localDateTime.isBefore(otherLocalDateTime));
     }
 
@@ -256,6 +260,10 @@ public class DateTime extends org.python.types.Object {
         args = {"other"}
     )
     public org.python.Object __le__(org.python.Object other) {
+        if (!(other instanceof org.python.stdlib.datetime.DateTime)) {
+            throw new org.python.exceptions.TypeError("'<=' not supported between instances of 'datetime.datetime' and '" + other.typeName() + "'");
+        }
+        // TODO: Implement.
         return null;
     }
 
@@ -264,6 +272,8 @@ public class DateTime extends org.python.types.Object {
         args = {"other"}
     )
     public org.python.Object __eq__(org.python.Object other) {
+        // TODO: Type check.
+        // TODO: Implement.
         return null;
     }
 
@@ -272,6 +282,10 @@ public class DateTime extends org.python.types.Object {
         args = {"other"}
     )
     public org.python.Object __gt__(org.python.Object other) {
+        if (!(other instanceof org.python.stdlib.datetime.DateTime)) {
+            throw new org.python.exceptions.TypeError("'>' not supported between instances of 'datetime.datetime' and '" + other.typeName() + "'");
+        }
+        // TODO: Implement.
         return null;
     }
 
@@ -280,6 +294,10 @@ public class DateTime extends org.python.types.Object {
         args = {"other"}
     )
     public org.python.Object __ge__(org.python.Object other) {
+        if (!(other instanceof org.python.stdlib.datetime.DateTime)) {
+            throw new org.python.exceptions.TypeError("'>=' not supported between instances of 'datetime.datetime' and '" + other.typeName() + "'");
+        }
+        // TODO: Implement.
         return null;
     }
 }
