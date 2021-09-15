@@ -63,17 +63,17 @@ public class TimeDelta extends org.python.types.Object {
         }
 
         if (args.length == 3) {
-            this.days = args[0];
-            this.seconds = args[1];
-            this.microseconds = args[2];
+            this.days = args[0].__int__();
+            this.seconds = args[1].__int__();
+            this.microseconds = args[2].__int__();
 
         } else if (args.length == 2) {
-            this.days = args[0];
-            this.seconds = args[1];
+            this.days = args[0].__int__();
+            this.seconds = args[1].__int__();
             this.microseconds = org.python.types.Int.getInt(0);
 
         } else if (args.length == 1) {
-            this.days = args[0];
+            this.days = args[0].__int__();
             this.seconds = org.python.types.Int.getInt(0);
             this.microseconds = org.python.types.Int.getInt(0);
         }
