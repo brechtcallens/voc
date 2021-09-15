@@ -9,6 +9,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class DateTest {
 
+    private void checkDate(org.python.stdlib.datetime.Date date, long year, long month, long day) {
+        assertEquals(year, ((org.python.types.Int) date.year).value);
+        assertEquals(month, ((org.python.types.Int) date.month).value);
+        assertEquals(day, ((org.python.types.Int) date.day).value);
+    }
+
     @Test
     public void testDateConstructor_NoArgs() {
         Throwable t = assertThrows(org.python.exceptions.TypeError.class, () -> new org.python.stdlib.datetime.Date(new Object[]{}, Collections.emptyMap()));
@@ -36,6 +42,49 @@ public class DateTest {
     public void testDateConstrutor_ValidDayForMonth() {
         org.python.Object[] args = {org.python.types.Int.getInt(2020), org.python.types.Int.getInt(2), org.python.types.Int.getInt((29))};
         new org.python.stdlib.datetime.Date(args, Collections.emptyMap());
+    }
+
+    @Test
+    public void testDateConstructor_invalidInput() {
+        org.python.Object[] args = {new org.python.types.Str("invalid"), org.python.types.Int.getInt(2), org.python.types.Int.getInt(3)};
+        Throwable t = assertThrows(org.python.exceptions.TypeError.class, () -> new org.python.stdlib.datetime.Date(args, Collections.emptyMap()));
+        assertEquals("an integer is required (got type str)", t.getMessage());
+
+        org.python.Object[] args2 = {org.python.types.Int.getInt(2021), new org.python.types.Str("invalid"), org.python.types.Int.getInt(3)};
+        Throwable t2 = assertThrows(org.python.exceptions.TypeError.class, () -> new org.python.stdlib.datetime.Date(args2, Collections.emptyMap()));
+        assertEquals("an integer is required (got type str)", t2.getMessage());
+
+        org.python.Object[] args3 = {org.python.types.Int.getInt(2021), org.python.types.Int.getInt(3), new org.python.types.Str("invalid"),};
+        Throwable t3 = assertThrows(org.python.exceptions.TypeError.class, () -> new org.python.stdlib.datetime.Date(args3, Collections.emptyMap()));
+        assertEquals("an integer is required (got type str)", t3.getMessage());
+    }
+
+    @Test
+    public void testDateConstructor_3Args() {
+        org.python.Object[] args = {org.python.types.Int.getInt(2021), org.python.types.Int.getInt(2), org.python.types.Int.getInt(12)};
+        org.python.stdlib.datetime.Date testDate = new org.python.stdlib.datetime.Date(args, Collections.emptyMap());
+        checkDate(testDate, 2021, 2, 12);
+    }
+
+    @Test
+    public void testDateConstructor_3Kwargs() {
+        org.python.Object[] args = {};
+        HashMap<String, org.python.Object> kwargs = new HashMap<>();
+        kwargs.put("year", org.python.types.Int.getInt(2013));
+        kwargs.put("month", org.python.types.Int.getInt(9));
+        kwargs.put("day", org.python.types.Int.getInt(13));
+        org.python.stdlib.datetime.Date testDate = new org.python.stdlib.datetime.Date(args, kwargs);
+        checkDate(testDate, 2013, 9, 13);
+    }
+
+    @Test
+    public void testDateConstructor_3MixedArgs() {
+        org.python.Object[] args = {org.python.types.Int.getInt(2017)};
+        HashMap<String, org.python.Object> kwargs = new HashMap<>();
+        kwargs.put("month", org.python.types.Int.getInt(4));
+        kwargs.put("day", org.python.types.Int.getInt(1));
+        org.python.stdlib.datetime.Date testDate = new org.python.stdlib.datetime.Date(args, kwargs);
+        checkDate(testDate, 2017, 4, 1);
     }
 
     @Test
