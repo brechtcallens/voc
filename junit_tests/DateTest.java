@@ -60,6 +60,16 @@ public class DateTest {
     }
 
     @Test
+    public void testDateConstructor_IrrelevantKeyword() {
+        org.python.Object[] args = {org.python.types.Int.getInt(2017), org.python.types.Int.getInt(5)};
+        HashMap<String, org.python.Object> kwargs = new HashMap<>();
+        kwargs.put("foo", org.python.types.Int.getInt(4));
+
+        Throwable t3 = assertThrows(org.python.exceptions.TypeError.class, () -> new org.python.stdlib.datetime.Date(args, kwargs));
+        assertEquals("function missing required argument 'day' (pos 3)", t3.getMessage());
+    }
+
+    @Test
     public void testDateConstructor_3Args() {
         org.python.Object[] args = {org.python.types.Int.getInt(2021), org.python.types.Int.getInt(2), org.python.types.Int.getInt(12)};
         org.python.stdlib.datetime.Date testDate = new org.python.stdlib.datetime.Date(args, Collections.emptyMap());
