@@ -479,4 +479,69 @@ public class DateTimeTest {
         });
         assertEquals(expectedMessage, exception.getMessage());
     }
+
+    @Test
+    public void testTimestamp() {
+        // A generic DateTime.
+        assertEquals(new Float(1631619791.432523), dateTime.timestamp().__float__());
+
+        // Max DateTime value.
+        dateTime = new DateTime(new org.python.Object[] {
+            Int.getInt(9999),
+            Int.getInt(12),
+            Int.getInt(31),
+            Int.getInt(22),
+            Int.getInt(59),
+            Int.getInt(59),
+            Int.getInt(999999)
+        }, Collections.emptyMap());
+        assertEquals(new Float(253402293600.0), dateTime.timestamp().__float__());
+
+        // Min DateTime value.
+        dateTime = new DateTime(new org.python.Object[] {
+            Int.getInt(1),
+            Int.getInt(1),
+            Int.getInt(2),
+            Int.getInt(0),
+            Int.getInt(0),
+            Int.getInt(0),
+            Int.getInt(0)
+        }, Collections.emptyMap());
+        assertEquals(new Float(-62135511450.0), dateTime.timestamp().__float__());
+    }
+
+    @Test
+    public void TimestampOutOfReach() {
+        // The minimum DateTime that will go out of range above max.
+        String expectedMessage = "year 10000 is out of range";
+        dateTime = new DateTime(new org.python.Object[] {
+            Int.getInt(9999),
+            Int.getInt(12),
+            Int.getInt(31),
+            Int.getInt(23),
+            Int.getInt(0),
+            Int.getInt(0),
+            Int.getInt(0)
+        }, Collections.emptyMap());
+        Exception exception = assertThrows(ValueError.class, () -> {
+            dateTime.timestamp();
+        });
+        assertEquals(expectedMessage, exception.getMessage());
+
+        // The maximum DateTime that will go out of range below min.
+        expectedMessage = "year 0 is out of range";
+        dateTime = new DateTime(new org.python.Object[] {
+            Int.getInt(1),
+            Int.getInt(1),
+            Int.getInt(1),
+            Int.getInt(23),
+            Int.getInt(59),
+            Int.getInt(59),
+            Int.getInt(999999)
+        }, Collections.emptyMap());
+        exception = assertThrows(ValueError.class, () -> {
+            dateTime.timestamp();
+        });
+        assertEquals(expectedMessage, exception.getMessage());
+    }
 }
