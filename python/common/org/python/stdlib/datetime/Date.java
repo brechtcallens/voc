@@ -212,6 +212,72 @@ public class Date extends org.python.types.Object {
         return daysInMonth[(int) month];
     }
 
+    @org.python.Method(__doc__ = "", args = {"other"})
+    @Override
+    public org.python.Object __eq__(org.python.Object other) {
+        if (other instanceof org.python.stdlib.datetime.Date) {
+            org.python.stdlib.datetime.Date castedOther = (org.python.stdlib.datetime.Date) other;
+            return org.python.types.Bool.getBool(_cmp(castedOther) == 0);
+        }
+        return org.python.types.NotImplementedType.NOT_IMPLEMENTED;
+    }
+
+    @org.python.Method(__doc__ = "", args = {"other"})
+    @Override
+    public org.python.Object __le__(org.python.Object other) {
+        if (other instanceof org.python.stdlib.datetime.Date) {
+            org.python.stdlib.datetime.Date castedOther = (org.python.stdlib.datetime.Date) other;
+            return org.python.types.Bool.getBool(_cmp(castedOther) <= 0);
+        }
+        return org.python.types.NotImplementedType.NOT_IMPLEMENTED;
+    }
+
+    @org.python.Method(__doc__ = "", args = {"other"})
+    @Override
+    public org.python.Object __lt__(org.python.Object other) {
+        if (other instanceof org.python.stdlib.datetime.Date) {
+            org.python.stdlib.datetime.Date castedOther = (org.python.stdlib.datetime.Date) other;
+            return org.python.types.Bool.getBool(_cmp(castedOther) < 0);
+        }
+        return org.python.types.NotImplementedType.NOT_IMPLEMENTED;
+    }
+
+    @org.python.Method(__doc__ = "", args = {"other"})
+    @Override
+    public org.python.Object __ge__(org.python.Object other) {
+        if (other instanceof org.python.stdlib.datetime.Date) {
+            org.python.stdlib.datetime.Date castedOther = (org.python.stdlib.datetime.Date) other;
+            return org.python.types.Bool.getBool(_cmp(castedOther) >= 0);
+        }
+        return org.python.types.NotImplementedType.NOT_IMPLEMENTED;
+    }
+
+    @org.python.Method(__doc__ = "", args = {"other"})
+    @Override
+    public org.python.Object __gt__(org.python.Object other) {
+        if (other instanceof org.python.stdlib.datetime.Date) {
+            org.python.stdlib.datetime.Date castedOther = (org.python.stdlib.datetime.Date) other;
+            return org.python.types.Bool.getBool(_cmp(castedOther) > 0);
+        }
+        return org.python.types.NotImplementedType.NOT_IMPLEMENTED;
+    }
+
+    private long _cmp(org.python.stdlib.datetime.Date other) {
+        long y = ((org.python.types.Int) this.year).value;
+        long m = ((org.python.types.Int) this.month).value;
+        long d = ((org.python.types.Int) this.day).value;
+        long y2 = ((org.python.types.Int) other.year).value;
+        long m2 = ((org.python.types.Int) other.month).value;
+        long d2 = ((org.python.types.Int) other.day).value;
+        if (y > y2) return 1;
+        if (y < y2) return -1;
+        if (m > m2) return 1;
+        if (m < m2) return -1;
+        if (d > d2) return 1;
+        if (d < d2) return -1;
+        return 0;
+    }
+
     @org.python.Method(__doc__ = "")
     public org.python.types.Str __repr__() {
         String year = this.year + "";
