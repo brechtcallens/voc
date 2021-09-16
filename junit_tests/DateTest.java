@@ -1,13 +1,13 @@
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.python.Object;
+import org.junit.jupiter.api.TestFactory;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
+import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DateTest {
 
@@ -74,21 +74,69 @@ public class DateTest {
     public void testIsoFormat() {
         org.python.Object[] args = {org.python.types.Int.getInt(2021), org.python.types.Int.getInt(2), org.python.types.Int.getInt(12)};
         org.python.stdlib.datetime.Date testDate = new org.python.stdlib.datetime.Date(args, Collections.emptyMap());
-        assertEquals("2021-02-12",((org.python.types.Str) testDate.isoformat()).value);
+        assertEquals("2021-02-12", ((org.python.types.Str) testDate.isoformat()).value);
     }
 
     @Test
     public void testIsoFormat_Padding() {
         org.python.Object[] args = {org.python.types.Int.getInt(1), org.python.types.Int.getInt(1), org.python.types.Int.getInt(1)};
         org.python.stdlib.datetime.Date testDate = new org.python.stdlib.datetime.Date(args, Collections.emptyMap());
-        assertEquals("0001-01-01",((org.python.types.Str) testDate.isoformat()).value);
+        assertEquals("0001-01-01", ((org.python.types.Str) testDate.isoformat()).value);
     }
+
+    @TestFactory
+    public Collection<DynamicTest> comparisonTestFactory() {
+        org.python.Object[] args = {org.python.types.Int.getInt(2020), org.python.types.Int.getInt(8), org.python.types.Int.getInt(14)};
+        org.python.stdlib.datetime.Date testDate = new org.python.stdlib.datetime.Date(args, Collections.emptyMap());
+        org.python.Object[] args2 = {org.python.types.Int.getInt(2020), org.python.types.Int.getInt(8), org.python.types.Int.getInt(14)};
+        org.python.stdlib.datetime.Date sameDate = new org.python.stdlib.datetime.Date(args2, Collections.emptyMap());
+        org.python.Object[] args3 = {org.python.types.Int.getInt(2020), org.python.types.Int.getInt(8), org.python.types.Int.getInt(16)};
+        org.python.stdlib.datetime.Date greaterDate = new org.python.stdlib.datetime.Date(args3, Collections.emptyMap());
+        org.python.Object[] args4 = {org.python.types.Int.getInt(2019), org.python.types.Int.getInt(8), org.python.types.Int.getInt(16)};
+        org.python.stdlib.datetime.Date smallerDate = new org.python.stdlib.datetime.Date(args4, Collections.emptyMap());
+        org.python.types.Str notADate = new org.python.types.Str("I am not a Date");
+
+        List<Map.Entry<String, Function<org.python.Object, org.python.Object>>> functions = new ArrayList<>();
+        functions.add(new AbstractMap.SimpleImmutableEntry<>("Eq", testDate::__eq__));
+        functions.add(new AbstractMap.SimpleImmutableEntry<>("Ne", testDate::__ne__));
+        functions.add(new AbstractMap.SimpleImmutableEntry<>("Le", testDate::__le__));
+        functions.add(new AbstractMap.SimpleImmutableEntry<>("Lt", testDate::__lt__));
+        functions.add(new AbstractMap.SimpleImmutableEntry<>("Ge", testDate::__ge__));
+        functions.add(new AbstractMap.SimpleImmutableEntry<>("Gt", testDate::__gt__));
+
+        boolean[] resultsSameDate = {true, false, true, false, true, false};
+        boolean[] resultsGreaterDate = {false, true, true, true, false, false};
+        boolean[] resultsSmallerDate = {false, true, false, false, true, true};
+
+        List<DynamicTest> tests = new ArrayList<>(functions.size());
+        for (int i = 0; i < functions.size(); i++) {
+            var entry = functions.get(i);
+            var funcName = entry.getKey();
+            var function = entry.getValue();
+            int j = i;
+
+            tests.add(DynamicTest.dynamicTest(
+                "test" + funcName + "_Same",
+                () -> assertEquals(resultsSameDate[j], ((org.python.types.Bool) function.apply(sameDate)).value)));
+            tests.add(DynamicTest.dynamicTest(
+                "test" + funcName + "_Greater",
+                () -> assertEquals(resultsGreaterDate[j], ((org.python.types.Bool) function.apply(greaterDate)).value)));
+            tests.add(DynamicTest.dynamicTest(
+                "test" + funcName + "_Smaller",
+                () -> assertEquals(resultsSmallerDate[j], ((org.python.types.Bool) function.apply(smallerDate)).value)));
+            tests.add(DynamicTest.dynamicTest(
+                "test" + funcName + "_Invalid",
+                () ->assertEquals(org.python.types.NotImplementedType.NOT_IMPLEMENTED, function.apply(notADate))));
+        }
+        return tests;
+    }
+
 
     @Nested
     class DateConstructorTest {
         @Test
         public void testDateConstructor_NoArgs() {
-            Throwable t = assertThrows(org.python.exceptions.TypeError.class, () -> new org.python.stdlib.datetime.Date(new Object[]{}, Collections.emptyMap()));
+            Throwable t = assertThrows(org.python.exceptions.TypeError.class, () -> new org.python.stdlib.datetime.Date(new org.python.Object[]{}, Collections.emptyMap()));
             assertEquals("function missing required argument 'year' (pos 1)", t.getMessage());
         }
 
