@@ -84,6 +84,27 @@ public class DateTest {
         assertEquals("0001-01-01", ((org.python.types.Str) testDate.isoformat()).value);
     }
 
+    @Test
+    public void testStr() {
+        org.python.Object[] args = {org.python.types.Int.getInt(2021), org.python.types.Int.getInt(2), org.python.types.Int.getInt(12)};
+        org.python.stdlib.datetime.Date testDate = new org.python.stdlib.datetime.Date(args, Collections.emptyMap());
+        assertEquals("2021-02-12", testDate.__str__().value);
+    }
+
+    @Test
+    public void testStr_Padding() {
+        org.python.Object[] args = {org.python.types.Int.getInt(1), org.python.types.Int.getInt(1), org.python.types.Int.getInt(1)};
+        org.python.stdlib.datetime.Date testDate = new org.python.stdlib.datetime.Date(args, Collections.emptyMap());
+        assertEquals("0001-01-01", testDate.__str__().value);
+    }
+
+    @Test
+    public void testRepr() {
+        org.python.Object[] args = {org.python.types.Int.getInt(2021), org.python.types.Int.getInt(2), org.python.types.Int.getInt(12)};
+        org.python.stdlib.datetime.Date testDate = new org.python.stdlib.datetime.Date(args, Collections.emptyMap());
+        assertEquals("datetime.date(2021, 2, 12)", testDate.__repr__().value);
+    }
+
     @TestFactory
     public Collection<DynamicTest> comparisonTestFactory() {
         org.python.Object[] args = {org.python.types.Int.getInt(2020), org.python.types.Int.getInt(8), org.python.types.Int.getInt(14)};
