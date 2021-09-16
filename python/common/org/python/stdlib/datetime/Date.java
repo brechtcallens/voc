@@ -279,7 +279,8 @@ public class Date extends org.python.types.Object {
     }
 
     @org.python.Method(__doc__ = "")
-    public org.python.types.Str __repr__() {
+    @Override
+    public org.python.types.Str __str__() {
         String year = this.year + "";
         while (year.length() < 4)
             year = "0" + year;
@@ -293,6 +294,15 @@ public class Date extends org.python.types.Object {
             day = "0" + day;
 
         return new org.python.types.Str(year + "-" + month + "-" + day);
+    }
+
+    @org.python.Method(__doc__ = "")
+    @Override
+    public org.python.types.Str __repr__() {
+        long y = ((org.python.types.Int) this.year).value;
+        long m = ((org.python.types.Int) this.month).value;
+        long d = ((org.python.types.Int) this.day).value;
+        return new org.python.types.Str(String.format("%s.%s(%d, %d, %d)", "datetime", "date", y, m, d));
     }
 
     public static org.python.Object constant_4() {
