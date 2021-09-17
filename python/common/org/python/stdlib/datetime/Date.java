@@ -299,10 +299,6 @@ public class Date extends org.python.types.Object {
         return new org.python.types.Str(String.format("%s.%s(%d, %d, %d)", "datetime", "date", y, m, d));
     }
 
-    public static org.python.Object constant_4() {
-        return org.python.types.Int.getInt(4);
-    }
-
     @org.python.Method(__doc__ = "")
     public org.python.types.Str __year__() {
         return new org.python.types.Str(this.year + "");
