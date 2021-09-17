@@ -52,6 +52,18 @@ public class DateTime extends org.python.types.Object {
     @org.python.Attribute
     public static final org.python.Object max = __max__();
 
+    @org.python.Method(__doc__ = "The year, month and day arguments are required. tzinfo may be None, or an instance " +
+        "of a tzinfo subclass. The remaining arguments must be integers in the following ranges:\n" +
+        "* MINYEAR <= year <= MAXYEAR,\n" +
+        "* 1 <= month <= 12,\n" +
+        "* 1 <= day <= number of days in the given month and year,\n" +
+        "* 0 <= hour < 24,\n" +
+        "* 0 <= minute < 60,\n" +
+        "* 0 <= second < 60,\n" +
+        "* 0 <= microsecond < 1000000,\n" +
+        "* fold in [0, 1].\n" +
+        "If an argument outside those ranges is given, ValueError is raised.",
+        args = {"args", "kwargs"})
     public DateTime(org.python.Object[] args, java.util.Map<java.lang.String, org.python.Object> kwargs) {
         super();
         checkContentsTypeMap(kwargs, Int.getInt(0));
@@ -153,14 +165,14 @@ public class DateTime extends org.python.types.Object {
         return new org.python.types.Str(returnStr);
     }
 
-    @org.python.Method(__doc__ = "")
+    @org.python.Method(__doc__ = "Return date object with same year, month and day.")
     public org.python.Object date() {
         org.python.Object[] args = {org.python.types.Int.getInt(this.timeUnits[YEAR_INDEX]), org.python.types.Int.getInt(this.timeUnits[MONTH_INDEX]),
             org.python.types.Int.getInt(this.timeUnits[DAY_INDEX])};
         return new Date(args, Collections.emptyMap());
     }
 
-    @org.python.Method(__doc__ = "")
+    @org.python.Method(__doc__ = "Return the current local datetime, with tzinfo None.")
     public static org.python.Object today() {
         java.time.LocalDateTime today = java.time.LocalDateTime.now();
         org.python.Object[] args = {org.python.types.Int.getInt(today.getYear()), org.python.types.Int.getInt(today.getMonth().getValue()),
@@ -204,7 +216,7 @@ public class DateTime extends org.python.types.Object {
         return new org.python.types.Str(this.timeUnits[MICROSECOND_INDEX] + "");
     }
 
-    @org.python.Method(__doc__ = "")
+    @org.python.Method(__doc__ = "returns minimum datetime")
     private static org.python.Object __min__() {
         org.python.types.Int year = org.python.types.Int.getInt(1);
         org.python.types.Int month = org.python.types.Int.getInt(1);
@@ -214,7 +226,7 @@ public class DateTime extends org.python.types.Object {
         return new DateTime(args, Collections.emptyMap());
     }
 
-    @org.python.Method(__doc__ = "")
+    @org.python.Method(__doc__ = "returns maximum datetime")
     private static org.python.Object __max__() {
         org.python.types.Int year = org.python.types.Int.getInt(9999);
         org.python.types.Int month = org.python.types.Int.getInt(12);
@@ -228,7 +240,8 @@ public class DateTime extends org.python.types.Object {
         return new DateTime(args, Collections.emptyMap());
     }
 
-    @org.python.Method(__doc__ = "")
+    @org.python.Method(__doc__ = "Return the day of the week as an integer, where Monday is 0 and Sunday is 6. For " +
+        "example, date(2002, 12, 4).weekday() == 2, a Wednesday.")
     public org.python.Object weekday() {
         long y = ((org.python.types.Int) this.year.__int__()).value;
         long m = ((org.python.types.Int) this.month.__int__()).value;
@@ -242,7 +255,7 @@ public class DateTime extends org.python.types.Object {
         return org.python.types.Int.getInt(convertToPython[day - 1]);
     }
 
-    @org.python.Method(__doc__ = "")
+    @org.python.Method(__doc__ = "parses python datetime into java localdatetime")
     private LocalDateTime toLocalDateTime() {
         return LocalDateTime.parse(this.__str__().value.replace(" ", "T"));
     }
@@ -312,6 +325,7 @@ public class DateTime extends org.python.types.Object {
         return Bool.getBool(!localDateTime.isBefore(otherLocalDateTime));
     }
 
+    @org.python.Method(__doc__ = "checks arguments for type")
     private void checkContentsTypeArray(org.python.Object[] args, int array_len, org.python.Object typeToLookFor) {
         for (int i = 0; i < array_len; i++) {
             if (!(args[i].getClass().equals(typeToLookFor.getClass()))) {
@@ -320,6 +334,7 @@ public class DateTime extends org.python.types.Object {
         }
     }
 
+    @org.python.Method(__doc__ = "checks arguments for type")
     private void checkContentsTypeMap(java.util.Map<java.lang.String, org.python.Object> kwargs, org.python.Object typeToLookFor) {
         for (String key : kwargs.keySet()) {
             if (!(kwargs.get(key).getClass().equals(typeToLookFor.getClass()))) {
@@ -328,9 +343,16 @@ public class DateTime extends org.python.types.Object {
         }
     }
 
+    @org.python.Method(
+        __doc__ = "Return a datetime with the same attributes, except for those attributes given new values by " +
+            "whichever keyword arguments are specified. Note that tzinfo=None can be specified to create a naive " +
+            "datetime from an aware datetime with no conversion of date and time data.",
+        args = {"args", "kwargs"}
+    )
     public org.python.stdlib.datetime.DateTime replace(org.python.Object[] args, java.util.Map<java.lang.String, org.python.Object> kwargs) {
         checkContentsTypeMap(kwargs, Int.getInt(0));
         checkContentsTypeArray(args, args.length, Int.getInt(0));
+
         HashMap<String, org.python.Object> whatToReplace = new HashMap<>();
         String[] keys = {"year", "month", "day", "hour", "minute", "second", "microsecond"};
         boolean kwargsIsUsed = false;
@@ -359,6 +381,11 @@ public class DateTime extends org.python.types.Object {
         return new DateTime(new org.python.Object[]{}, whatToReplace);
     }
 
+    @org.python.Method(
+        __doc__ = "Return a datetime corresponding to a date_string in one of the formats emitted by date.isoformat()" +
+            " and datetime.isoformat().",
+        args = {"date_string"}
+    )
     public static org.python.Object fromisoformat(org.python.Object date_string) {
         if (!(date_string instanceof org.python.types.Str)) {
             throw new org.python.exceptions.TypeError("fromisoformat: argument must be str");
