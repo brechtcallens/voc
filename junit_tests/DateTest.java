@@ -58,6 +58,7 @@ public class DateTest {
         Throwable t = assertThrows(org.python.exceptions.TypeError.class, () -> org.python.stdlib.datetime.Date.fromisoformat(org.python.types.Int.getInt(2019)));
         assertEquals("fromisoformat: argument must be str", t.getMessage());
     }
+
     @Test
     public void testFromIsoFormat_WrongFormat() {
         Throwable t = assertThrows(org.python.exceptions.ValueError.class, () -> org.python.stdlib.datetime.Date.fromisoformat(new org.python.types.Str("2019/12/04")));
@@ -186,7 +187,7 @@ public class DateTest {
         }
 
         @Test
-        public void testDateConstructor_invalidInput() {
+        public void testDateConstructor_3ArgsInvalidInput() {
             org.python.Object[] args = {new org.python.types.Str("invalid"), org.python.types.Int.getInt(2), org.python.types.Int.getInt(3)};
             Throwable t = assertThrows(org.python.exceptions.TypeError.class, () -> new org.python.stdlib.datetime.Date(args, Collections.emptyMap()));
             assertEquals("an integer is required (got type str)", t.getMessage());
@@ -205,7 +206,6 @@ public class DateTest {
             org.python.Object[] args = {org.python.types.Int.getInt(2017), org.python.types.Int.getInt(5)};
             HashMap<String, org.python.Object> kwargs = new HashMap<>();
             kwargs.put("foo", org.python.types.Int.getInt(4));
-
             Throwable t = assertThrows(org.python.exceptions.TypeError.class, () -> new org.python.stdlib.datetime.Date(args, kwargs));
             assertEquals("function missing required argument 'day' (pos 3)", t.getMessage());
         }
@@ -239,21 +239,21 @@ public class DateTest {
         }
 
         @Test
-        public void testDateConstructor_1ArgStr() {
-            org.python.Object[] args = {new org.python.types.Str("null")};
-            Throwable t = assertThrows(org.python.exceptions.TypeError.class, () -> new org.python.stdlib.datetime.Date(args, Collections.emptyMap()));
-            assertEquals("an integer is required (got type str)", t.getMessage());
-        }
-
-        @Test
-        public void testDateConstructor_1ArgInt() {
+        public void testDateConstructor_1Arg() {
             org.python.Object[] args = {org.python.types.Int.getInt(5)};
             Throwable t = assertThrows(org.python.exceptions.TypeError.class, () -> new org.python.stdlib.datetime.Date(args, Collections.emptyMap()));
             assertEquals("function missing required argument 'month' (pos 2)", t.getMessage());
         }
 
         @Test
-        public void testDateConstructor_1KwargYearInt() {
+        public void testDateConstructor_1ArgInvalid() {
+            org.python.Object[] args = {new org.python.types.Str("null")};
+            Throwable t = assertThrows(org.python.exceptions.TypeError.class, () -> new org.python.stdlib.datetime.Date(args, Collections.emptyMap()));
+            assertEquals("an integer is required (got type str)", t.getMessage());
+        }
+
+        @Test
+        public void testDateConstructor_1KwargYear() {
             org.python.Object[] args = {};
             HashMap<String, org.python.Object> kwargs = new HashMap<>();
             kwargs.put("year", org.python.types.Int.getInt(2013));
@@ -262,7 +262,7 @@ public class DateTest {
         }
 
         @Test
-        public void testDateConstructor_1KwargYearStr() {
+        public void testDateConstructor_1KwargYearInvalid() {
             org.python.Object[] args = {};
             HashMap<String, org.python.Object> kwargs = new HashMap<>();
             kwargs.put("year", new org.python.types.Str("null"));
@@ -271,7 +271,7 @@ public class DateTest {
         }
 
         @Test
-        public void testDateConstructor_1KwargNotYearInt() {
+        public void testDateConstructor_1KwargNotYear() {
             org.python.Object[] args = {};
             HashMap<String, org.python.Object> kwargs = new HashMap<>();
             kwargs.put("month", org.python.types.Int.getInt(4));
@@ -280,7 +280,7 @@ public class DateTest {
         }
 
         @Test
-        public void testDateConstructor_1KwargNotYearStr() {
+        public void testDateConstructor_1KwargNotYearInvalid() {
             org.python.Object[] args = {};
             HashMap<String, org.python.Object> kwargs = new HashMap<>();
             kwargs.put("month", new org.python.types.Str("null"));
