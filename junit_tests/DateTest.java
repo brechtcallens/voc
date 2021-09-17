@@ -187,6 +187,20 @@ public class DateTest {
         }
 
         @Test
+        public void testDateConstrutor_InvalidMonth() {
+            org.python.Object[] args = {org.python.types.Int.getInt(2021), org.python.types.Int.getInt(22), org.python.types.Int.getInt((29))};
+            Throwable t = assertThrows(org.python.exceptions.ValueError.class, () -> new org.python.stdlib.datetime.Date(args, Collections.emptyMap()));
+            assertEquals("month must be in 1..12", t.getMessage());
+        }
+
+        @Test
+        public void testDateConstrutor_InvalidYear() {
+            org.python.Object[] args = {org.python.types.Int.getInt(12345), org.python.types.Int.getInt(1), org.python.types.Int.getInt((1))};
+            Throwable t = assertThrows(org.python.exceptions.ValueError.class, () -> new org.python.stdlib.datetime.Date(args, Collections.emptyMap()));
+            assertEquals("year 12345 is out of range", t.getMessage());
+        }
+
+        @Test
         public void testDateConstructor_3ArgsInvalidInput() {
             org.python.Object[] args = {new org.python.types.Str("invalid"), org.python.types.Int.getInt(2), org.python.types.Int.getInt(3)};
             Throwable t = assertThrows(org.python.exceptions.TypeError.class, () -> new org.python.stdlib.datetime.Date(args, Collections.emptyMap()));
