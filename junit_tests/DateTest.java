@@ -301,6 +301,53 @@ public class DateTest {
             Throwable t = assertThrows(org.python.exceptions.TypeError.class, () -> new org.python.stdlib.datetime.Date(args, kwargs));
             assertEquals("function missing required argument 'year' (pos 1)", t.getMessage());
         }
-    }
 
+        @Test
+        public void testDateConstructor_2ArgsYearInvalid() {
+            org.python.Object[] args = {};
+            HashMap<String, org.python.Object> kwargs = new HashMap<>();
+            kwargs.put("year", new org.python.types.Str("null"));
+            kwargs.put("month", org.python.types.Int.getInt(9));
+            Throwable t = assertThrows(org.python.exceptions.TypeError.class, () -> new org.python.stdlib.datetime.Date(args, kwargs));
+            assertEquals("an integer is required (got type str)", t.getMessage());
+        }
+
+        @Test
+        public void testDateConstructor_2ArgsMonthInvalid() {
+            org.python.Object[] args = {};
+            HashMap<String, org.python.Object> kwargs = new HashMap<>();
+            kwargs.put("year", org.python.types.Int.getInt(9));
+            kwargs.put("month", new org.python.types.Str("null"));
+            Throwable t = assertThrows(org.python.exceptions.TypeError.class, () -> new org.python.stdlib.datetime.Date(args, kwargs));
+            assertEquals("an integer is required (got type str)", t.getMessage());
+        }
+
+        @Test
+        public void testDateConstructor_2ArgsNoYear() {
+            org.python.Object[] args = {};
+            HashMap<String, org.python.Object> kwargs = new HashMap<>();
+            kwargs.put("month", org.python.types.Int.getInt(9));
+            kwargs.put("day", org.python.types.Int.getInt(9));
+            Throwable t = assertThrows(org.python.exceptions.TypeError.class, () -> new org.python.stdlib.datetime.Date(args, kwargs));
+            assertEquals("function missing required argument 'year' (pos 1)", t.getMessage());
+        }
+
+        @Test
+        public void testDateConstructor_2ArgsNoMonth() {
+            org.python.Object[] args = {org.python.types.Int.getInt(2010)};
+            HashMap<String, org.python.Object> kwargs = new HashMap<>();
+            kwargs.put("day", org.python.types.Int.getInt(9));
+            Throwable t = assertThrows(org.python.exceptions.TypeError.class, () -> new org.python.stdlib.datetime.Date(args, kwargs));
+            assertEquals("function missing required argument 'month' (pos 2)", t.getMessage());
+        }
+
+        @Test
+        public void testDateConstructor_2ArgsNoDay() {
+            org.python.Object[] args = {org.python.types.Int.getInt(2010)};
+            HashMap<String, org.python.Object> kwargs = new HashMap<>();
+            kwargs.put("month", org.python.types.Int.getInt(9));
+            Throwable t = assertThrows(org.python.exceptions.TypeError.class, () -> new org.python.stdlib.datetime.Date(args, kwargs));
+            assertEquals("function missing required argument 'day' (pos 3)", t.getMessage());
+        }
+    }
 }
