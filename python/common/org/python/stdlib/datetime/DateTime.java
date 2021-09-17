@@ -1,18 +1,14 @@
 package org.python.stdlib.datetime;
 
 import org.python.types.Bool;
-import org.python.types.Float;
 import org.python.types.Int;
-import org.python.types.Object;
+import org.python.types.Str;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.temporal.WeekFields;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Locale;
+import java.util.HashMap;
 import java.util.Map;
 
 public class DateTime extends org.python.types.Object {
@@ -27,7 +23,7 @@ public class DateTime extends org.python.types.Object {
     private final int MIN_YEAR = 1;
     private final int MAX_YEAR = 9999;
 
-    private Long[] timeUnits = {0l, 0l, 0l, 0l, 0l, 0l, 0l};
+    private final Long[] timeUnits = {0l, 0l, 0l, 0l, 0l, 0l, 0l};
 
     @org.python.Attribute
     public final org.python.Object year;
@@ -58,6 +54,8 @@ public class DateTime extends org.python.types.Object {
 
     public DateTime(org.python.Object[] args, java.util.Map<java.lang.String, org.python.Object> kwargs) {
         super();
+        checkContentsTypeMap(kwargs, Int.getInt(0));
+        checkContentsTypeArray(args, args.length, Int.getInt(0));
         String[] keys = {"year", "month", "day", "hour", "minute", "second", "microsecond"};
         boolean kwargsIsUsed = false;
         int keyIndex = 0;
@@ -314,46 +312,91 @@ public class DateTime extends org.python.types.Object {
         return Bool.getBool(!localDateTime.isBefore(otherLocalDateTime));
     }
 
-    @org.python.Method(
-        __doc__ = "Return POSIX timestamp corresponding to the datetime instance. The return value is a float similar " +
-            "to that returned by time.time(). Naive datetime instances are assumed to represent local time and this " +
-            "method relies on the platform C mktime() function to perform the conversion. Since datetime supports wider " +
-            "range of values than mktime() on many platforms, this method may raise OverflowError for times far in the " +
-            "past or far in the future."
-    )
-    public org.python.Object timestamp() {
-        LocalDateTime maxAllowedLocalDateTime = LocalDateTime.of(9999, 12, 31, 22, 59, 59, 999999999);
-        LocalDateTime minAllowedLocalDateTime = LocalDateTime.of(1, 1, 2, 0, 0, 0, 0);
-        LocalDateTime localDateTime = this.toLocalDateTime();
-
-        if (localDateTime.isAfter(maxAllowedLocalDateTime)) {
-            throw new org.python.exceptions.ValueError("year " + (localDateTime.getYear()+1) + " is out of range");
-        } else if (localDateTime.isBefore(minAllowedLocalDateTime)) {
-            throw new org.python.exceptions.ValueError("year " + (localDateTime.getYear()-1) + " is out of range");
+    private void checkContentsTypeArray(org.python.Object[] args, int array_len, org.python.Object typeToLookFor) {
+        for (int i = 0; i < array_len; i++) {
+            if (!(args[i].getClass().equals(typeToLookFor.getClass()))) {
+                throw new org.python.exceptions.TypeError("an integer is required (got type " + args[i].typeName() + ")");
+            }
         }
-
-        double epochSeconds = localDateTime.atZone(ZoneId.systemDefault()).toEpochSecond();
-        return new Float(epochSeconds + (double)localDateTime.getNano() / 1e9);
     }
 
-    public static org.python.Object fromtimestamp(org.python.Object timestamp) { // TODO: tz arg
-        if (!(timestamp instanceof org.python.types.Float) && !(timestamp instanceof org.python.types.Int)) {
-            throw new org.python.exceptions.TypeError("an integer is required (got type " + timestamp.typeName() + ")");
+    private void checkContentsTypeMap(java.util.Map<java.lang.String, org.python.Object> kwargs, org.python.Object typeToLookFor) {
+        for (String key : kwargs.keySet()) {
+            if (!(kwargs.get(key).getClass().equals(typeToLookFor.getClass()))) {
+                throw new org.python.exceptions.TypeError("an integer is required (got type " + kwargs.get(key).typeName() + ")");
+            }
         }
+    }
 
-        long timestampSeconds = (long) ((Float) timestamp).value;
-        long timestampNano = 1000 * (long) (((Float) timestamp).value * 1e6 % 1e6);
-        Instant instant = Instant.ofEpochSecond(timestampSeconds, timestampNano);
-        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+    public org.python.stdlib.datetime.DateTime replace(org.python.Object[] args, java.util.Map<java.lang.String, org.python.Object> kwargs) {
+        checkContentsTypeMap(kwargs, Int.getInt(0));
+        checkContentsTypeArray(args, args.length, Int.getInt(0));
+        HashMap<String, org.python.Object> whatToReplace = new HashMap<>();
+        String[] keys = {"year", "month", "day", "hour", "minute", "second", "microsecond"};
+        boolean kwargsIsUsed = false;
+        int argIndex = 0;
+        for (String key : keys) {
+            if (kwargs.get(key) != null) {
+                whatToReplace.put(key, kwargs.get(key));
+                kwargsIsUsed = true;
+            } else if (args.length > argIndex) {
+                if (kwargsIsUsed)
+                    throw new org.python.exceptions.SyntaxError("positional argument follows keyword argument");
+                whatToReplace.put(key, args[argIndex]);
+                argIndex++;
+            }
+        }
+        for (Map.Entry<java.lang.String, org.python.Object> entry : kwargs.entrySet()) {
+            if (!Arrays.asList(keys).contains(entry.getKey())) {
+                throw new org.python.exceptions.TypeError("'" + entry.getKey() + "' is an invalid keyword argument for replace()");
+            }
+        }
+        for (int i = 0; i < 7; i++) {
+            if (!whatToReplace.containsKey(keys[i])) {
+                whatToReplace.put(keys[i], Int.getInt(timeUnits[i]));
+            }
+        }
+        return new DateTime(new org.python.Object[]{}, whatToReplace);
+    }
 
-        return new DateTime(new org.python.Object[] {
-            Int.getInt(localDateTime.getYear()),
-            Int.getInt(localDateTime.getMonthValue()),
-            Int.getInt(localDateTime.getDayOfMonth()),
-            Int.getInt(localDateTime.getHour()),
-            Int.getInt(localDateTime.getMinute()),
-            Int.getInt(localDateTime.getSecond()),
-            Int.getInt(localDateTime.getNano() / 1000)
-        }, Collections.emptyMap());
+    public static org.python.Object fromisoformat(org.python.Object date_string) {
+        if (!(date_string instanceof org.python.types.Str)) {
+            throw new org.python.exceptions.TypeError("fromisoformat: argument must be str");
+        }
+        Integer[] Allowed_lengths = {10, 13, 16, 19, 26};
+        String format = "yyyy-MM-dd-HH:mm:ss.nnnnnnnnn";
+        String j_str = ((Str) date_string).value;
+        Integer len = j_str.length();
+        if (!Arrays.stream(Allowed_lengths).anyMatch(i -> i == len)) {
+            throw new org.python.exceptions.ValueError("Invalid isoformat string: '" + j_str + "'");
+        }
+        String mandatory = j_str.substring(0, 10);
+        String extra = "";
+        if (j_str.length() > 10) {
+            extra = "-" + j_str.substring(11);
+        }
+        j_str = mandatory + extra;
+        if (j_str.length() == 10) {
+            j_str = j_str + "-00";
+        } else if (j_str.length() == 26) {
+            j_str = j_str + "000";
+        }
+        DateTimeFormatter form = DateTimeFormatter.ofPattern(format.substring(0, j_str.length()));
+        try {
+            LocalDateTime pd = LocalDateTime.parse(j_str, form);
+            return new DateTime(new org.python.Object[]{
+                Int.getInt(pd.getYear()),
+                Int.getInt(pd.getMonthValue()),
+                Int.getInt(pd.getDayOfMonth()),
+                Int.getInt(pd.getHour()),
+                Int.getInt(pd.getMinute()),
+                Int.getInt(pd.getSecond()),
+                Int.getInt(pd.getNano() / 1000)
+            }, Collections.emptyMap()
+            );
+        } catch (java.time.format.DateTimeParseException e) {
+            j_str = ((Str) date_string).value;
+            throw new org.python.exceptions.ValueError("Invalid isoformat string: '" + j_str + "'");
+        }
     }
 }
