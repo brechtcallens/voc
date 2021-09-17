@@ -132,29 +132,20 @@ public class Date extends org.python.types.Object {
         }
 
         if (args.length + kwargs.size() == 1) {
+            this.year = null;
             if (kwargs.get("year") != null) {
                 this.year = kwargs.get("year");
             } else if (args.length > 0) {
                 this.year = args[0];
             }
-            if (kwargs.get("month") != null) {
-                this.month = kwargs.get("month");
-            }
-            if (kwargs.get("day") != null) {
-                this.day = kwargs.get("day");
-            }
 
-            String y = this.year + "";
-            String m = this.month + "";
-            String d = this.day + "";
-
-            if (!(this.year instanceof org.python.types.Int) && !y.equals("null")) {
+            if (!(this.year instanceof org.python.types.Int) && this.year != null) {
                 throw new org.python.exceptions.TypeError("an integer is required (got type " + this.year.typeName() + ")");
             }
-            if (!y.equals("null")) {
+            if (this.year != null) {
                 throw new org.python.exceptions.TypeError("function missing required argument 'month' (pos 2)");
             }
-            if (!m.equals("null") || !d.equals("null")) {
+            else {
                 throw new org.python.exceptions.TypeError("function missing required argument 'year' (pos 1)");
             }
         }
