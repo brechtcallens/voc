@@ -84,6 +84,21 @@ public class TimeDelta extends org.python.types.Object {
             this.microseconds = org.python.types.Int.getInt(0);
         }
 
+        if (kwargs.get("days") != null) {
+            long day = ((org.python.types.Int) kwargs.get("days")).value;
+            this.days = org.python.types.Int.getInt(day);
+        }
+
+        if (kwargs.get("seconds") != null) {
+            long second = ((org.python.types.Int) kwargs.get("seconds")).value;
+            this.seconds = org.python.types.Int.getInt(second);
+        }
+
+        if (kwargs.get("microseconds") != null) {
+            long microsecond = ((org.python.types.Int) kwargs.get("microseconds")).value;
+            this.microseconds = org.python.types.Int.getInt(microsecond);
+        }
+
         if (kwargs.get("weeks") != null) {
             long weeks = ((org.python.types.Int) kwargs.get("weeks")).value;
             long day = ((org.python.types.Int) this.days).value;
@@ -110,6 +125,37 @@ public class TimeDelta extends org.python.types.Object {
             long microsecond = ((org.python.types.Int) this.microseconds).value;
             microsecond = microsecond + millisecond * 1000;
             this.microseconds = org.python.types.Int.getInt(microsecond);
+        }
+
+        long microsecond = ((org.python.types.Int) this.microseconds).value;
+        if (microsecond > 999999 || microsecond < 0) {
+            long second = ((org.python.types.Int) this.seconds).value;
+            second += microsecond / 1000000;
+            microsecond = microsecond % 1000000;
+            if (microsecond < 0) {
+                second--;
+                microsecond = 1000000 + microsecond;
+            }
+            this.seconds = org.python.types.Int.getInt(second);
+            this.microseconds = org.python.types.Int.getInt(microsecond);
+        }
+
+        long second = ((org.python.types.Int) this.seconds).value;
+        if (second > 86400 || second < 0) {
+            long day = ((org.python.types.Int) this.days).value;
+            day += second / 86400;
+            second = second % 86400;
+            if (second < 0) {
+                day--;
+                second = 86400 + second;
+            }
+            this.days = org.python.types.Int.getInt(day);
+            this.seconds = org.python.types.Int.getInt(second);
+        }
+
+        long day = ((org.python.types.Int) this.days).value;
+        if(day < -999999999 || day > 999999999) {
+            throw new org.python.exceptions.OverflowError("Python int to large to convert to C int");
         }
     }
 
@@ -150,10 +196,6 @@ public class TimeDelta extends org.python.types.Object {
         long sum_seconds = days + (((org.python.types.Int) this.seconds).value);
         long microseconds = (((org.python.types.Int) this.microseconds).value);
         String micro = "";
-        if(microseconds < 0) {
-            sum_seconds--;
-            microseconds = 1000000 + microseconds;
-        }
         if (microseconds == 0) {
             micro = "0";
         } else if (microseconds < 10) {
