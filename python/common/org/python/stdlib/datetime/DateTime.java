@@ -300,6 +300,19 @@ public class DateTime extends org.python.types.Object {
     }
 
     @org.python.Method(
+        __doc__ = "Return self!=value.",
+        args = {"other"}
+    )
+    public org.python.Object __ne__(org.python.Object other) {
+        if (!(other instanceof org.python.stdlib.datetime.DateTime)) {
+            return Bool.getBool(true);
+        }
+        LocalDateTime localDateTime = this.toLocalDateTime();
+        LocalDateTime otherLocalDateTime = ((DateTime) other).toLocalDateTime();
+        return Bool.getBool(localDateTime.isBefore(otherLocalDateTime) || otherLocalDateTime.isBefore(localDateTime));
+    }
+
+    @org.python.Method(
         __doc__ = "Return self>value.",
         args = {"other"}
     )

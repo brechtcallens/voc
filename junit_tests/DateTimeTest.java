@@ -33,7 +33,7 @@ public class DateTimeTest {
 
     @Test
     public void testToday() {
-        DateTime.today(); // TODO: Mock?
+        DateTime.today();
     }
 
     @Test
@@ -72,6 +72,21 @@ public class DateTimeTest {
         }, Collections.emptyMap());
 
         assertEquals(new org.python.types.Str("0001-01-01 01:01:01.000001"), dateTime.__str__());
+    }
+
+    @Test
+    public void testConstructorPositionalAfterKeyword() {
+        String expectedMessage = "positional argument follows keyword argument";
+        org.python.Object[] args = {
+            Int.getInt(1),
+            Int.getInt(1)
+        };
+        Map<String, Object> kwargs = new HashMap<>();
+        kwargs.put("year", Int.getInt(1000));
+        Exception exception = assertThrows(SyntaxError.class, () -> {
+            new DateTime(args, kwargs);
+        });
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -117,7 +132,6 @@ public class DateTimeTest {
 
     @Test
     public void testConstructorInvalidDay() {
-        // TODO: Check for February and stuff.
         String expectedMessage = "day is out of range for month";
         org.python.Object[] args = {
             Int.getInt(1),
@@ -425,10 +439,36 @@ public class DateTimeTest {
         assertEquals(Bool.getBool(false), dateTime.__eq__(string));
 
         Int integer = Int.getInt(1);
-        assertEquals(Bool.getBool(false), dateTime.__eq__(string));
+        assertEquals(Bool.getBool(false), dateTime.__eq__(integer));
 
         Float fl = new Float(1.0);
-        assertEquals(Bool.getBool(false), dateTime.__eq__(string));
+        assertEquals(Bool.getBool(false), dateTime.__eq__(fl));
+    }
+
+    @Test
+    public void testNeCombinations() {
+        List<DateTime> sortedDateTimes = getSortedDateTimes();
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 7; j++) {
+                if (i == j) {
+                    assertEquals(Bool.getBool(false), sortedDateTimes.get(i).__ne__(sortedDateTimes.get(j)));
+                } else {
+                    assertEquals(Bool.getBool(true), sortedDateTimes.get(i).__ne__(sortedDateTimes.get(j)));
+                }
+            }
+        }
+    }
+
+    @Test
+    public void testNeUnsupportedTypes() {
+        Str string = new Str("string");
+        assertEquals(Bool.getBool(true), dateTime.__ne__(string));
+
+        Int integer = Int.getInt(1);
+        assertEquals(Bool.getBool(true), dateTime.__ne__(integer));
+
+        Float fl = new Float(1.0);
+        assertEquals(Bool.getBool(true), dateTime.__ne__(fl));
     }
 
     @Test
@@ -547,9 +587,6 @@ public class DateTimeTest {
         assertEquals(Bool.getBool(true), dt.__eq__(dt2));
     }
 
-    // Test replacing all values using kwargs
-    // Swap existing attributes
-    // Swap new attributes
     @Test
     public void testReplaceKwargs() {
         org.python.Object[] emptyArgs = new org.python.Object[]{};
@@ -582,8 +619,6 @@ public class DateTimeTest {
         assertEquals(Bool.getBool(true), dt.__eq__(dt2));
     }
 
-    // Test replacing all values using kwargs and args
-    // Test empty replace
     @Test
     public void testReplaceKwargsAndArgs() {
         org.python.Object[] args = new org.python.Object[]{
@@ -628,7 +663,6 @@ public class DateTimeTest {
 
     }
 
-    // Invalid kwargs
     @Test
     public void testReplaceInvalidKwargs() {
         Map<String, Object> kwargs = new HashMap<>();
