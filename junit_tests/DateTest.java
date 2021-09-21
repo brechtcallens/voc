@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
 
@@ -27,13 +27,19 @@ public class DateTest {
 
     @Test
     public void testToday() {
-        org.python.stdlib.datetime.Date testedToday = (org.python.stdlib.datetime.Date) org.python.stdlib.datetime.Date.today();
+        LocalDate todayBefore = null;
+        org.python.stdlib.datetime.Date testedToday = null;
 
-        LocalDateTime realToday = LocalDateTime.now();
+        // Make sure that the actual date is the same before and after calling the tested today() method
+        // Otherwise we could get two different 'todays' when running this test at midnight
+        while (!LocalDate.now().equals(todayBefore)) {
+            todayBefore = LocalDate.now();
+            testedToday = (org.python.stdlib.datetime.Date) org.python.stdlib.datetime.Date.today();
+        }
 
-        assertEquals(realToday.getYear(), ((org.python.types.Int) testedToday.year).value);
-        assertEquals(realToday.getMonthValue(), ((org.python.types.Int) testedToday.month).value);
-        assertEquals(realToday.getDayOfMonth(), ((org.python.types.Int) testedToday.day).value);
+        assertEquals(todayBefore.getYear(), ((org.python.types.Int) testedToday.year).value);
+        assertEquals(todayBefore.getMonthValue(), ((org.python.types.Int) testedToday.month).value);
+        assertEquals(todayBefore.getDayOfMonth(), ((org.python.types.Int) testedToday.day).value);
     }
 
     @Test
