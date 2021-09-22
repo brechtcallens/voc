@@ -21,8 +21,15 @@ public class Date extends org.python.types.Object {
 
     @org.python.Method(__doc__ = "")
     public Date(org.python.Object[] args, java.util.Map<java.lang.String, org.python.Object> kwargs) {
-
         super();
+
+        java.util.HashMap<java.lang.String, org.python.Object> filteredKwargs = new java.util.HashMap<>(kwargs.size());
+        kwargs.forEach((k, v) -> {
+            if (k.equals("year") || k.equals("month") || k.equals("day")) {
+                filteredKwargs.put(k, v);
+            }
+        });
+        kwargs = filteredKwargs;
 
         if (args.length + kwargs.size() > 3) {
             int val = args.length + kwargs.size();
@@ -54,10 +61,10 @@ public class Date extends org.python.types.Object {
             }
 
             if ((this.year instanceof org.python.types.Int) && (this.month instanceof org.python.types.Int) && (this.day instanceof org.python.types.Int)) {
-                if (1 <= ((org.python.types.Int) this.year).value && ((org.python.types.Int) this.year).value <= 999) {
-
+                if (1 <= ((org.python.types.Int) this.year).value && ((org.python.types.Int) this.year).value <= 9999) {
                     if (1d <= ((org.python.types.Int) this.month).value && ((org.python.types.Int) this.month).value <= 12d) {
-                        if (1d <= ((org.python.types.Int) this.day).value && ((org.python.types.Int) this.day).value <= 31d) {
+                        long daysThisMonth = daysInMonth(((org.python.types.Int) this.year).value, ((org.python.types.Int) this.month).value);
+                        if (1d <= ((org.python.types.Int) this.day).value && ((org.python.types.Int) this.day).value <= daysThisMonth) {
                         } else {
                             throw new org.python.exceptions.ValueError("day is out of range for month");
                         }
@@ -69,19 +76,21 @@ public class Date extends org.python.types.Object {
                 }
             } else {
                 if (!(this.year instanceof org.python.types.Int)) {
-                    throw new org.python.exceptions.TypeError("integer argument expected, got " + this.year.typeName());
+                    throw new org.python.exceptions.TypeError("an integer is required (got type " + this.year.typeName() + ")");
                 }
                 if (!(this.month instanceof org.python.types.Int)) {
-                    throw new org.python.exceptions.TypeError("integer argument expected, got " + this.month.typeName());
+                    throw new org.python.exceptions.TypeError("an integer is required (got type " + this.month.typeName() + ")");
                 }
                 if (!(this.day instanceof org.python.types.Int)) {
-                    throw new org.python.exceptions.TypeError("integer argument expected, got " + this.day.typeName());
+                    throw new org.python.exceptions.TypeError("an integer is required (got type " + this.day.typeName() + ")");
                 }
             }
         }
 
         if (args.length + kwargs.size() == 2) {
-
+            this.year = null;
+            this.month = null;
+            this.day = null;
             if (args.length == 2) {
                 this.year = args[0];
                 this.month = args[1];
@@ -92,7 +101,6 @@ public class Date extends org.python.types.Object {
             } else if (args.length > 0) {
                 this.year = args[0];
             }
-
             if (kwargs.get("month") != null) {
                 this.month = kwargs.get("month");
             }
@@ -104,70 +112,169 @@ public class Date extends org.python.types.Object {
             String m = this.month + "";
             String d = this.day + "";
 
-            if (!y.equals("null") && !(this.year instanceof org.python.types.Int)) {
-                throw new org.python.exceptions.TypeError("intege argument expected, got " + this.year.typeName());
+            if (this.year != null && !(this.year instanceof org.python.types.Int)) {
+                throw new org.python.exceptions.TypeError("an integer is required (got type " + this.year.typeName() + ")");
             }
             if (kwargs.get("year") != null && args.length > 0) {
                 throw new org.python.exceptions.SyntaxError("positional argument follows keyword argument");
             }
 
-            if (!(this.month instanceof org.python.types.Int) && !m.equals("null")) {
-                throw new org.python.exceptions.TypeError("integer argument expected, got " + this.month.typeName());
+            if (!(this.month instanceof org.python.types.Int) && this.month != null) {
+                throw new org.python.exceptions.TypeError("an integer is required (got type " + this.month.typeName() + ")");
             }
 
-            if (y.equals("null")) {
-
+            if (this.year == null) {
                 throw new org.python.exceptions.TypeError("function missing required argument 'year' (pos 1)");
             }
-
-            if (m.equals("null")) {
-
+            if (this.month == null) {
                 throw new org.python.exceptions.TypeError("function missing required argument 'month' (pos 2)");
             }
-            if (d.equals("null")) {
+            if (this.day == null) {
                 throw new org.python.exceptions.TypeError("function missing required argument 'day' (pos 3)");
             }
         }
 
         if (args.length + kwargs.size() == 1) {
+            this.year = null;
             if (kwargs.get("year") != null) {
                 this.year = kwargs.get("year");
             } else if (args.length > 0) {
                 this.year = args[0];
             }
-            if (kwargs.get("month") != null) {
-                this.month = kwargs.get("month");
+
+            if (!(this.year instanceof org.python.types.Int) && this.year != null) {
+                throw new org.python.exceptions.TypeError("an integer is required (got type " + this.year.typeName() + ")");
             }
-
-            if (kwargs.get("day") != null) {
-                this.day = kwargs.get("day");
-            }
-
-            String y = this.year + "";
-            String m = this.month + "";
-            String d = this.day + "";
-
-            if (!(this.year instanceof org.python.types.Int) && !y.equals("null")) {
-                throw new org.python.exceptions.TypeError("integer argument expected, got " + this.year.typeName());
-
-            }
-            if (!y.equals("null")) {
+            if (this.year != null) {
                 throw new org.python.exceptions.TypeError("function missing required argument 'month' (pos 2)");
             }
-            if (!m.equals("null") || !d.equals("null")) {
+            else {
                 throw new org.python.exceptions.TypeError("function missing required argument 'year' (pos 1)");
             }
-
         }
+
         if (args.length + kwargs.size() == 0) {
             throw new org.python.exceptions.TypeError("function missing required argument 'year' (pos 1)");
         }
+    }
 
+    @org.python.Method(__doc__ = "", args = {"dtstr"})
+    public static Date fromisoformat(org.python.Object dtstr) {
+        // It is assumed that this function will only be called with a
+        // string of length exactly 10, and (though this is not used) ASCII-only
+        if (!(dtstr instanceof org.python.types.Str)) {
+            throw new org.python.exceptions.TypeError("fromisoformat: argument must be str");
+        }
+        String s = ((org.python.types.Str) dtstr).value;
+        try {
+            int year = Integer.parseInt(s.substring(0, 4));
+            if (s.charAt(4) != '-') {
+                throw new org.python.exceptions.ValueError("Invalid date separator: " + s.charAt(4));
+            }
+
+            int month = Integer.parseInt(s.substring(5, 7));
+            if (s.charAt(7) != '-') {
+                throw new org.python.exceptions.ValueError("Invalid date separator");
+            }
+
+            int day = Integer.parseInt(s.substring(8, 10));
+
+            org.python.Object[] args = {org.python.types.Int.getInt(year), org.python.types.Int.getInt(month), org.python.types.Int.getInt(day)};
+            return new Date(args, java.util.Collections.emptyMap());
+        } catch (Exception ex) {
+            throw new org.python.exceptions.ValueError("Invalid isoformat string: '" + dtstr + "'");
+        }
     }
 
     @org.python.Method(__doc__ = "")
-    public org.python.types.Str __repr__() {
+    public org.python.Object isoformat() {
+        long y = ((org.python.types.Int) this.year).value;
+        long m = ((org.python.types.Int) this.month).value;
+        long d = ((org.python.types.Int) this.day).value;
+        return new org.python.types.Str(String.format("%04d-%02d-%02d", y, m, d));
+    }
 
+    private boolean isLeap(long year) {
+        return (year % 4 == 0) && (year % 100 != 0 || year % 400 == 0);
+    }
+
+    private long daysInMonth(long year, long month) {
+        long[] daysInMonth = { -1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+        if (month == 2 && isLeap(year)) {
+            return 29;
+        }
+        return daysInMonth[(int) month];
+    }
+
+    @org.python.Method(__doc__ = "", args = {"other"})
+    @Override
+    public org.python.Object __eq__(org.python.Object other) {
+        if (other instanceof org.python.stdlib.datetime.Date) {
+            org.python.stdlib.datetime.Date castedOther = (org.python.stdlib.datetime.Date) other;
+            return org.python.types.Bool.getBool(_cmp(castedOther) == 0);
+        }
+        return org.python.types.NotImplementedType.NOT_IMPLEMENTED;
+    }
+
+    @org.python.Method(__doc__ = "", args = {"other"})
+    @Override
+    public org.python.Object __le__(org.python.Object other) {
+        if (other instanceof org.python.stdlib.datetime.Date) {
+            org.python.stdlib.datetime.Date castedOther = (org.python.stdlib.datetime.Date) other;
+            return org.python.types.Bool.getBool(_cmp(castedOther) <= 0);
+        }
+        return org.python.types.NotImplementedType.NOT_IMPLEMENTED;
+    }
+
+    @org.python.Method(__doc__ = "", args = {"other"})
+    @Override
+    public org.python.Object __lt__(org.python.Object other) {
+        if (other instanceof org.python.stdlib.datetime.Date) {
+            org.python.stdlib.datetime.Date castedOther = (org.python.stdlib.datetime.Date) other;
+            return org.python.types.Bool.getBool(_cmp(castedOther) < 0);
+        }
+        return org.python.types.NotImplementedType.NOT_IMPLEMENTED;
+    }
+
+    @org.python.Method(__doc__ = "", args = {"other"})
+    @Override
+    public org.python.Object __ge__(org.python.Object other) {
+        if (other instanceof org.python.stdlib.datetime.Date) {
+            org.python.stdlib.datetime.Date castedOther = (org.python.stdlib.datetime.Date) other;
+            return org.python.types.Bool.getBool(_cmp(castedOther) >= 0);
+        }
+        return org.python.types.NotImplementedType.NOT_IMPLEMENTED;
+    }
+
+    @org.python.Method(__doc__ = "", args = {"other"})
+    @Override
+    public org.python.Object __gt__(org.python.Object other) {
+        if (other instanceof org.python.stdlib.datetime.Date) {
+            org.python.stdlib.datetime.Date castedOther = (org.python.stdlib.datetime.Date) other;
+            return org.python.types.Bool.getBool(_cmp(castedOther) > 0);
+        }
+        return org.python.types.NotImplementedType.NOT_IMPLEMENTED;
+    }
+
+    private long _cmp(org.python.stdlib.datetime.Date other) {
+        long y = ((org.python.types.Int) this.year).value;
+        long m = ((org.python.types.Int) this.month).value;
+        long d = ((org.python.types.Int) this.day).value;
+        long y2 = ((org.python.types.Int) other.year).value;
+        long m2 = ((org.python.types.Int) other.month).value;
+        long d2 = ((org.python.types.Int) other.day).value;
+        if (y > y2) return 1;
+        if (y < y2) return -1;
+        if (m > m2) return 1;
+        if (m < m2) return -1;
+        if (d > d2) return 1;
+        if (d < d2) return -1;
+        return 0;
+    }
+
+    @org.python.Method(__doc__ = "")
+    @Override
+    public org.python.types.Str __str__() {
         String year = this.year + "";
         while (year.length() < 4)
             year = "0" + year;
@@ -183,8 +290,13 @@ public class Date extends org.python.types.Object {
         return new org.python.types.Str(year + "-" + month + "-" + day);
     }
 
-    public static org.python.Object constant_4() {
-        return org.python.types.Int.getInt(4);
+    @org.python.Method(__doc__ = "")
+    @Override
+    public org.python.types.Str __repr__() {
+        long y = ((org.python.types.Int) this.year).value;
+        long m = ((org.python.types.Int) this.month).value;
+        long d = ((org.python.types.Int) this.day).value;
+        return new org.python.types.Str(String.format("%s.%s(%d, %d, %d)", "datetime", "date", y, m, d));
     }
 
     @org.python.Method(__doc__ = "")
@@ -204,7 +316,6 @@ public class Date extends org.python.types.Object {
 
     @org.python.Method(__doc__ = "")
     private static org.python.Object __max__() {
-
         org.python.types.Int day = org.python.types.Int.getInt(31);
         org.python.types.Int month = org.python.types.Int.getInt(12);
         org.python.types.Int year = org.python.types.Int.getInt(9999);
@@ -214,7 +325,6 @@ public class Date extends org.python.types.Object {
     }
 
     @org.python.Method(__doc__ = "")
-
     private static org.python.Object __min__() {
         org.python.types.Int day = org.python.types.Int.getInt(1);
         org.python.types.Int month = org.python.types.Int.getInt(1);
@@ -222,7 +332,6 @@ public class Date extends org.python.types.Object {
 
         org.python.Object[] args = {year, month, day};
         return new Date(args, Collections.emptyMap());
-
     }
 
     @org.python.Method(__doc__ = "")
@@ -238,7 +347,6 @@ public class Date extends org.python.types.Object {
 
     @org.python.Method(__doc__ = "")
     public org.python.Object ctime() {
-
         String[] monthList = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
         double monthNum = ((org.python.types.Int) this.month).value;
         String monthStr = monthList[(int) monthNum - 1];
@@ -247,7 +355,7 @@ public class Date extends org.python.types.Object {
         double weekdayNum = ((org.python.types.Int) weekday()).value;
         String weekdayStr = weekdayList[(int) weekdayNum];
 
-        return new org.python.types.Str(weekdayStr + " " + monthStr + "  " + this.day + " 00:00:00 " + this.year);
+        return new org.python.types.Str(weekdayStr + " " + monthStr + " " + this.day + " 00:00:00 " + this.year);
     }
 
     @org.python.Method(__doc__ = "")
@@ -262,6 +370,5 @@ public class Date extends org.python.types.Object {
         int day = c.get(java.util.Calendar.DAY_OF_WEEK);
         int[] convertToPython = {6, 0, 1, 2, 3, 4, 5};
         return org.python.types.Int.getInt(convertToPython[day - 1]);
-
     }
 }
