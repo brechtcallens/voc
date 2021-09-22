@@ -179,6 +179,42 @@ public class DateTest {
         }
 
         @Test
+        public void testDateConstructor_SyntaxError() {
+            org.python.Object[] args = {org.python.types.Int.getInt(1), org.python.types.Int.getInt(2)};
+            HashMap<String, org.python.Object> kwargs = new HashMap<>();
+            kwargs.put("year", org.python.types.Int.getInt(9));
+            Throwable t = assertThrows(org.python.exceptions.SyntaxError.class, () -> new org.python.stdlib.datetime.Date(args, kwargs));
+            assertEquals("positional argument follows keyword argument", t.getMessage());
+        }
+
+        @Test
+        public void testDateConstructor_SyntaxError_YearKwargWith2Args() {
+            org.python.Object[] args = {org.python.types.Int.getInt(1), org.python.types.Int.getInt(2)};
+            HashMap<String, org.python.Object> kwargs = new HashMap<>();
+            kwargs.put("year", org.python.types.Int.getInt(9));
+            Throwable t = assertThrows(org.python.exceptions.SyntaxError.class, () -> new org.python.stdlib.datetime.Date(args, kwargs));
+            assertEquals("positional argument follows keyword argument", t.getMessage());
+        }
+
+        @Test
+        public void testDateConstructor_SyntaxError_MonthKwargWith2Args() {
+            org.python.Object[] args = {org.python.types.Int.getInt(1), org.python.types.Int.getInt(2)};
+            HashMap<String, org.python.Object> kwargs = new HashMap<>();
+            kwargs.put("month", org.python.types.Int.getInt(9));
+            Throwable t = assertThrows(org.python.exceptions.SyntaxError.class, () -> new org.python.stdlib.datetime.Date(args, kwargs));
+            assertEquals("positional argument follows keyword argument", t.getMessage());
+        }
+
+        @Test
+        public void testDateConstructor_SyntaxError_YearKwargWith1Arg() {
+            org.python.Object[] args = {org.python.types.Int.getInt(1)};
+            HashMap<String, org.python.Object> kwargs = new HashMap<>();
+            kwargs.put("year", org.python.types.Int.getInt(9));
+            Throwable t = assertThrows(org.python.exceptions.SyntaxError.class, () -> new org.python.stdlib.datetime.Date(args, kwargs));
+            assertEquals("positional argument follows keyword argument", t.getMessage());
+        }
+
+        @Test
         public void testDateConstrutor_InvalidDayForMonth() {
             org.python.Object[] args = {org.python.types.Int.getInt(2021), org.python.types.Int.getInt(2), org.python.types.Int.getInt((29))};
             Throwable t = assertThrows(org.python.exceptions.ValueError.class, () -> new org.python.stdlib.datetime.Date(args, Collections.emptyMap()));
