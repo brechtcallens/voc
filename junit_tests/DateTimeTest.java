@@ -38,7 +38,7 @@ public class DateTimeTest {
 
     @Test
     public void testDate() {
-        //dateTime.date(); //TODO: Wait for Date to fix.
+        dateTime.date();
     }
 
     @Test
