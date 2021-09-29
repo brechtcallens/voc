@@ -521,6 +521,25 @@ public class TimeDeltaTest {
         assertEquals("unsupported operand type(s) for >: 'datetime.timedelta' and 'int'", exception.getMessage());
     }
 
+    @Test
+    public void testBenchmark() {
+        TimeDelta delta1 = createDelta(1, 2, 3);
+        TimeDelta delta2 = createDelta(1, 2, 3);
+        for(int i=0; i<100000; i++) {
+            delta1.total_seconds();
+            delta1.__add__(delta2);
+            delta1.__sub__(delta2);
+            delta1.__mul__(getInt(5));
+            delta1.__pos__();
+            delta1.__str__();
+            delta1.__lt__(delta2);
+            delta1.__le__(delta2);
+            delta1.__eq__(delta2);
+            delta1.__ne__(delta2);
+            delta1.__ge__(delta2);
+            delta1.__gt__(delta2);
+        }
+    }
 
 
 }

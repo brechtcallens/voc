@@ -294,11 +294,13 @@ public class TimeDelta extends org.python.types.Object {
     public org.python.types.Str __str__() {
         String returnStr = "";
 
+       //int days = (int) ((org.python.types.Int) this.days).value;
         long days = ((org.python.types.Int) this.days).value;
         if(days != 0) {
             returnStr += days + " day" + ((days > 1 || days < -1) ? "s" : "") + ", ";
         }
 
+        //int seconds = (int) ((org.python.types.Int) this.seconds).value;
         long seconds = ((org.python.types.Int) this.seconds).value;
         long minutes = seconds / 60;
         seconds = seconds % 60;
@@ -308,6 +310,7 @@ public class TimeDelta extends org.python.types.Object {
         returnStr += (minutes < 10 ? "0" : "") + minutes + ":";
         returnStr += (seconds < 10 ? "0" : "") + seconds;
 
+        //int microseconds = (int)((org.python.types.Int) this.microseconds).value;
         long microseconds = ((org.python.types.Int) this.microseconds).value;
         if (microseconds == 0) {
             returnStr += "";
