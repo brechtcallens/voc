@@ -2,6 +2,7 @@ package org.python.types;
 
 import org.Python;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -643,6 +644,8 @@ public class List extends org.python.types.Object {
                 count++;
             }
         }
+
+
         return org.python.types.Int.getInt(count);
     }
 
