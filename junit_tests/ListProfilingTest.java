@@ -25,7 +25,6 @@ public class ListProfilingTest {
         List list2 = new List();
         ArrayList<org.python.types.Int> preAllocatedInts = allocateInts(size);
 
-        //int size = 17;
         for (int i = 0; i < size; i++) {
             list1.append(preAllocatedInts.get(i));
         }
@@ -40,8 +39,7 @@ public class ListProfilingTest {
         list1.reverse();
         list1.sort(null, null);
         assertEquals(Bool.TRUE, list1.__eq__(list2));
-
-
+        
         List list3 = (List) list1.__add__(list2);
         list3.sort(null, null);
         assertEquals(getInt(2), list3.count(getInt((size-1))));

@@ -526,19 +526,7 @@ public class List extends org.python.types.Object {
             args = {"item"}
     )
     public org.python.Object __contains__(org.python.Object item) {
-        /*
-        boolean found = false;
-        for (int i = 0; i < this.value.size(); i++) {
-            if (((org.python.types.Bool) org.python.types.Object.__cmp_eq__(
-                    item, this.value.get(i))).value) {
-                found = true;
-                break;
-            }
-        }
-        return org.python.types.Bool.getBool(found);*/
-
         return org.python.types.Bool.getBool(this.value.contains(item));
-
     }
 
     @org.python.Method(
@@ -641,18 +629,6 @@ public class List extends org.python.types.Object {
             args = {"other"}
     )
     public org.python.Object count(org.python.Object other) {
-        /*int count = 0;
-        for (int i = 0; i < this.value.size(); i++) {
-            if (((org.python.types.Bool) org.python.types.Object.__cmp_eq__(
-                    other, this.value.get(i))).value) {
-                count++;
-            }
-        }
-
-
-        return org.python.types.Int.getInt(count);
-         */
-
         java.util.Iterator it = this.value.iterator();
         int count = 0;
         while(it.hasNext()) {
