@@ -53,7 +53,7 @@ public class ListProfilingTest {
         }
 
         for (int i = size-1; i >= 0; i--){
-            list2.pop(preAllocatedInts.get(0));
+            list2.pop(preAllocatedInts.get(i));
         }
     }
 }
