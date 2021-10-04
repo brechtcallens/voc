@@ -1,5 +1,7 @@
 package org.python.types;
 
+import java.util.Arrays;
+
 public class Dict extends org.python.types.Object {
     public java.util.Map<org.python.Object, org.python.Object> value;
 
@@ -391,9 +393,9 @@ public class Dict extends org.python.types.Object {
         org.python.Object key = entry.getKey();
         org.python.Object value = this.value.remove(key);
 
-        java.util.List<org.python.Object> item_pair = new java.util.ArrayList<org.python.Object>();
-        item_pair.add(key);
-        item_pair.add(value);
+        java.util.List<org.python.Object> item_pair = new java.util.LinkedList<org.python.Object>(Arrays.asList(key,value));
+        //item_pair.add(key);
+        //item_pair.add(value);
         return new org.python.types.Tuple(item_pair);
     }
 
