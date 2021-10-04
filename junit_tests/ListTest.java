@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.python.types.Int;
 
 public class ListTest {
     /**
@@ -41,6 +42,18 @@ public class ListTest {
     @org.junit.After
     public void tearDown() {
 	this.list = null;
+    }
+
+    @Test
+    public void listAlgorithmWorkload() {
+        org.python.types.List result = new org.python.types.List();
+        org.python.Object intZero = Int.getInt(0);
+        list.append(intZero);
+        for (int i = 1; i <= 1500; i++) {
+            org.python.Object intI = Int.getInt(i);
+            list.__setitem__(intZero, intI);
+            result = (org.python.types.List) result.__add__(list.__mul__(intI));
+        }
     }
 
     @Test
