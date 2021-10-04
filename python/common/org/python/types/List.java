@@ -542,10 +542,11 @@ public class List extends org.python.types.Object {
     )
     public org.python.Object __add__(org.python.Object other) {
         if (other instanceof org.python.types.List) {
-            org.python.types.List result = new org.python.types.List();
-            result.value.addAll(this.value);
-            result.value.addAll(((org.python.types.List) other).value);
-            return result;
+            int resultSize = value.size() + ((org.python.types.List) other).value.size();
+            java.util.ArrayList<org.python.Object> result = new java.util.ArrayList<>(resultSize);
+            result.addAll(value);
+            result.addAll(((org.python.types.List) other).value);
+            return new org.python.types.List(result);
         } else {
             throw new org.python.exceptions.TypeError(
                     String.format("can only concatenate list (not \"%s\") to list", Python.typeName(other.getClass())));
@@ -559,11 +560,15 @@ public class List extends org.python.types.Object {
     public org.python.Object __mul__(org.python.Object other) {
         if (other instanceof org.python.types.Int) {
             long count = ((org.python.types.Int) other).value;
-            org.python.types.List result = new org.python.types.List();
-            for (long i = 0; i < count; i++) {
-                result.value.addAll(this.value);
+            if (count <= 0) {
+                return new org.python.types.List();
             }
-            return result;
+            int resultSize = (int) (count * value.size());
+            java.util.ArrayList<org.python.Object> result = new java.util.ArrayList<>(resultSize);
+            for (long i = 0; i < count; i++) {
+                result.addAll(value);
+            }
+            return new org.python.types.List(result);
         } else if (other instanceof org.python.types.Bool) {
             boolean count = ((org.python.types.Bool) other).value;
             org.python.types.List result = new org.python.types.List();
