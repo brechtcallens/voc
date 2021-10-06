@@ -6,7 +6,21 @@ SAMPLE_SUBSTITUTIONS
 
 
 class SetTests(TranspileTestCase):
-    pass
+    def test_set_readonly_true(self):
+        self.assertCodeExecution("""
+            from datetime import date
+            try:
+                d = date(1970, 1, 1)
+                d.year = 1971
+            except Exception as e:
+                print(type(e), ':', e)
+            """)
+    
+    def test_set_readonly_default_false(self):
+        self.assertCodeExecution("""
+            import time
+            time.altzone = -7100
+            """)
 
 
 class BuiltinSetFunctionTests(BuiltinFunctionTestCase, TranspileTestCase):
