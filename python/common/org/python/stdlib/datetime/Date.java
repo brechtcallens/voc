@@ -2,6 +2,8 @@ package org.python.stdlib.datetime;
 
 import java.util.Collections;
 
+import org.python.Object;
+
 public class Date extends org.python.types.Object {
 
     @org.python.Attribute
@@ -18,6 +20,11 @@ public class Date extends org.python.types.Object {
 
     @org.python.Attribute
     public static final org.python.Object max = __max__();
+
+    @Override
+    public void __setattr__(String name, Object value) {
+        throw new org.python.exceptions.AttributeError("attribute '" + name + "' of 'datetime.date' objects is not writable");
+    }
 
     @org.python.Method(__doc__ = "")
     public Date(org.python.Object[] args, java.util.Map<java.lang.String, org.python.Object> kwargs) {
