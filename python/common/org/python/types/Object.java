@@ -365,6 +365,10 @@ public class Object extends java.lang.RuntimeException implements org.python.Obj
         }
     }
 
+    public boolean allowNewAttributes() {
+        return getClass() != org.python.types.Object.class;
+    }
+
     public boolean __setattr_null(java.lang.String name, org.python.Object value) {
         // org.Python.debug(String.format("SETATTR %s", name), value);
         // org.Python.debug("SELF ", this.__repr__());
@@ -375,7 +379,7 @@ public class Object extends java.lang.RuntimeException implements org.python.Obj
         // org.Python.debug("ATTR ", attr);
 
         // The base object can't have attribute set on it unless the attribute already exists.
-        if (this.getClass() == org.python.types.Object.class) {
+        if (!allowNewAttributes()) {
             if (attr == null) {
                 return false;
             }

@@ -186,6 +186,11 @@ public class Date extends org.python.types.Object {
         }
     }
 
+    @Override
+    public boolean allowNewAttributes() {
+        return false;
+    }
+
     @org.python.Method(__doc__ = "")
     public org.python.Object isoformat() {
         long y = ((org.python.types.Int) this.year).value;
