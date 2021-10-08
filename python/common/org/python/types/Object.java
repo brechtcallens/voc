@@ -355,7 +355,7 @@ public class Object extends java.lang.RuntimeException implements org.python.Obj
         try {
             this.__setattr__(((org.python.types.Str) name).value, value);
         } catch (java.lang.ClassCastException e) {
-            throw new org.python.exceptions.TypeError("__setattr__(): attribute name must be string");
+            throw new org.python.exceptions.TypeError("attribute name must be string, not '" + name.typeName() + "'");
         }
     }
 
