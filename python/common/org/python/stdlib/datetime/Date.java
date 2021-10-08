@@ -199,6 +199,15 @@ public class Date extends org.python.types.Object {
         return new org.python.types.Str(String.format("%04d-%02d-%02d", y, m, d));
     }
 
+    @Override
+    public boolean __setattr_null(java.lang.String name, org.python.Object value) {
+        org.python.Object attr = this.__class__.__getattribute_null(name);
+        if (attr == null) {
+            return false;
+        }
+        throw new org.python.exceptions.AttributeError("attribute '" + name + "' of '" + this.typeName() + "' objects is not writable");
+    }
+
     private boolean isLeap(long year) {
         return (year % 4 == 0) && (year % 100 != 0 || year % 400 == 0);
     }
