@@ -20,6 +20,15 @@ class DateTimeModuleTests(TranspileTestCase):
     def test_write_year(self):
         self.assertCodeExecution(self.create_date_test("date.year = 2016"))
 
+    def test_setattr_invalid(self):
+        self.assertCodeExecution(self.create_date_test("date.__setattr__(42, 15)"))
+
+    def test_setattr_nonexisting(self):
+        self.assertCodeExecution(self.create_date_test("date.__setattr__('foo', 42)"))
+
+    def test_setattr_existing(self):
+        self.assertCodeExecution(self.create_date_test("date.__setattr__('year', 42)"))
+
     def test_read_month(self):
         self.assertCodeExecution(self.create_date_test("print(date.month)"))
 
