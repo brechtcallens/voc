@@ -312,6 +312,8 @@ public class Python {
                     name = name.substring(17).toLowerCase();
                 } else if (name.startsWith("org.python.exceptions.")) {
                     name = name.substring(22);
+                } else if (name.startsWith("org.python.stdlib.")) {
+                    name = name.substring(18).toLowerCase();
                 } else if (name.startsWith("python.")) {
                     name = cls.getSimpleName();
                 }
