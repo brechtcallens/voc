@@ -388,6 +388,9 @@ public class Object extends java.lang.RuntimeException implements org.python.Obj
         if (attr == null) {
             this.__dict__.put(name, value);
         } else {
+            if (this.__class__.isAttributeReadonly(name)) {
+                throw new org.python.exceptions.AttributeError("attribute '" + name + "' of '" + this.typeName() + "' objects is not writable");
+            }
             // if attribute is not a descriptor add it to local instance
             if (!(attr instanceof org.python.types.Property)) {
                 this.__dict__.put(name, value);

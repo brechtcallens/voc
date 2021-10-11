@@ -308,6 +308,21 @@ public class Type extends org.python.types.Object implements org.python.Callable
         );
     }
 
+    public boolean isAttributeReadonly(java.lang.String name) {
+        try {
+            java.lang.reflect.Field field = this.klass.getDeclaredField(name);
+
+            org.python.Attribute annotation =
+                    (org.python.Attribute) field.getAnnotation(org.python.Attribute.class);
+            if (annotation != null) {
+                return annotation.readonly();
+            }
+        } catch (java.lang.NoSuchFieldException e) {
+        }
+
+        return false;
+    }
+
     public org.python.Object __getattribute_null(java.lang.String name) {
         // System.out.println("GETATTRIBUTE CLASS " + this.klass.getName() + " " + name + " " + this.origin);
         // System.out.println("CLASS ATTRS " + this.__dict__);
