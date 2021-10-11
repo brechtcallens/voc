@@ -4,13 +4,13 @@ import java.util.Collections;
 
 public class Date extends org.python.types.Object {
 
-    @org.python.Attribute
+    @org.python.Attribute(readonly = true)
     public org.python.Object year = __year__();
 
-    @org.python.Attribute
+    @org.python.Attribute(readonly = true)
     public org.python.Object month = __month__();
 
-    @org.python.Attribute
+    @org.python.Attribute(readonly = true)
     public org.python.Object day = __day__();
 
     @org.python.Attribute
